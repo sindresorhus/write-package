@@ -18,5 +18,4 @@ test('sync', function (t) {
 	fn.sync(tmp, fixture);
 	var x = readPkg.sync(tmp);
 	t.true(x.foo);
-	t.end();
 });
