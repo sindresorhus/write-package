@@ -15,18 +15,18 @@ $ npm install --save write-pkg
 ## Usage
 
 ```js
-var path = require('path');
-var writePkg = require('write-pkg');
+const path = require('path');
+const writePkg = require('write-pkg');
 
-writePkg({foo: true}).then(function () {
+writePkg({foo: true}).then(() => {
 	console.log('done');
 });
 
-writePkg(__dirname, {foo: true}).then(function () {
+writePkg(__dirname, {foo: true}).then(() => {
 	console.log('done');
 });
 
-writePkg(path.join('unicorn', 'package.json'), {foo: true}).then(function () {
+writePkg(path.join('unicorn', 'package.json'), {foo: true}).then(() => {
 	console.log('done');
 });
 ```
@@ -38,7 +38,7 @@ writePkg(path.join('unicorn', 'package.json'), {foo: true}).then(function () {
 
 Returns a promise.
 
-### readPkg.sync([path], data)
+### writePkg.sync([path], data)
 
 #### path
 
