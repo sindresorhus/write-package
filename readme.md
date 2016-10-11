@@ -36,14 +36,14 @@ writePkg(path.join('unicorn', 'package.json'), {foo: true}).then(() => {
 
 ### writePkg([path], data)
 
-Returns a promise.
+Returns a `Promise`.
 
 ### writePkg.sync([path], data)
 
 #### path
 
-Type: `string`  
-Default: `.`
+Type: `string`<br>
+Default: `process.cwd()`
 
 Path to where the `package.json` file should be written or its directory.
 
@@ -56,4 +56,4 @@ Path to where the `package.json` file should be written or its directory.
 
 ## License
 
-MIT © [Sindre Sorhus](http://sindresorhus.com)
+MIT © [Sindre Sorhus](https://sindresorhus.com)

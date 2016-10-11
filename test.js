@@ -1,21 +1,21 @@
 'use strict';
-var test = require('ava');
-var tempfile = require('tempfile');
-var readPkg = require('read-pkg');
-var fn = require('./');
-var fixture = {foo: true};
+const test = require('ava');
+const tempfile = require('tempfile');
+const readPkg = require('read-pkg');
+const m = require('./');
 
-test('async', function (t) {
-	var tmp = tempfile();
-	return fn(tmp, fixture).then(function () {
-		var x = readPkg.sync(tmp);
-		t.true(x.foo);
-	});
+const fixture = {foo: true};
+
+test('async', async t => {
+	const tmp = tempfile();
+	await m(tmp, fixture);
+	const x = await readPkg(tmp);
+	t.true(x.foo);
 });
 
-test('sync', function (t) {
-	var tmp = tempfile();
-	fn.sync(tmp, fixture);
-	var x = readPkg.sync(tmp);
+test('sync', t => {
+	const tmp = tempfile();
+	m.sync(tmp, fixture);
+	const x = readPkg.sync(tmp);
 	t.true(x.foo);
 });

@@ -1,9 +1,10 @@
 'use strict';
-var path = require('path');
-var writeJsonFile = require('write-json-file');
-var opts = {indent: 2};
+const path = require('path');
+const writeJsonFile = require('write-json-file');
 
-module.exports = function (fp, data) {
+const opts = {indent: 2};
+
+module.exports = (fp, data) => {
 	if (typeof fp !== 'string') {
 		data = fp;
 		fp = '.';
@@ -14,7 +15,7 @@ module.exports = function (fp, data) {
 	return writeJsonFile(fp, data, opts);
 };
 
-module.exports.sync = function (fp, data) {
+module.exports.sync = (fp, data) => {
 	if (typeof fp !== 'string') {
 		data = fp;
 		fp = '.';
