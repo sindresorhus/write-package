@@ -29,6 +29,7 @@
     "package"
   ],
   "dependencies": {
+    "sort-keys": "^1.1.2",
     "write-json-file": "^2.0.0"
   },
   "devDependencies": {
