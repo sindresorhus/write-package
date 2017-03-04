@@ -2,7 +2,7 @@
 const test = require('ava');
 const tempfile = require('tempfile');
 const readPkg = require('read-pkg');
-const m = require('./');
+const m = require('.');
 
 const fixture = {
 	foo: true,
