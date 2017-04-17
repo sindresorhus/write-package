@@ -18,9 +18,7 @@ function normalize(pkg) {
 	for (const key of Object.keys(pkg)) {
 		if (!dependencyKeys.has(key)) {
 			ret[key] = pkg[key];
-		}
-
-		if (Object.keys(pkg[key]).length !== 0) {
+		} else if (Object.keys(pkg[key]).length !== 0) {
 			ret[key] = sortKeys(pkg[key]);
 		}
 	}
