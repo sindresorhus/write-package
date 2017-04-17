@@ -19,6 +19,7 @@ function normalize(pkg) {
 		if (!dependencyKeys.has(key)) {
 			ret[key] = pkg[key];
 		}
+
 		if (Object.keys(pkg[key]).length !== 0) {
 			ret[key] = sortKeys(pkg[key]);
 		}
