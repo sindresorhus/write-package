@@ -6,6 +6,10 @@ const m = require('.');
 
 const fixture = {
 	foo: true,
+	scripts: {
+		b: '1',
+		a: '1'
+	},
 	dependencies: {
 		foo: '1.0.0',
 		bar: '1.0.0'
@@ -29,6 +33,7 @@ test('async', async t => {
 	await m(tmp, fixture);
 	const x = await readPkg(tmp, {normalize: false});
 	t.true(x.foo);
+	t.deepEqual(Object.keys(x.scripts), ['b', 'a']);
 	t.deepEqual(Object.keys(x.dependencies), ['bar', 'foo']);
 	t.deepEqual(Object.keys(x.devDependencies), ['bar', 'foo']);
 	t.deepEqual(Object.keys(x.optionalDependencies), ['bar', 'foo']);
@@ -40,6 +45,7 @@ test('sync', t => {
 	m.sync(tmp, fixture);
 	const x = readPkg.sync(tmp, {normalize: false});
 	t.true(x.foo);
+	t.deepEqual(Object.keys(x.scripts), ['b', 'a']);
 	t.deepEqual(Object.keys(x.dependencies), ['bar', 'foo']);
 	t.deepEqual(Object.keys(x.devDependencies), ['bar', 'foo']);
 	t.deepEqual(Object.keys(x.optionalDependencies), ['bar', 'foo']);
