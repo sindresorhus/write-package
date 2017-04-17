@@ -1,6 +1,6 @@
 {
   "name": "write-pkg",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Write a package.json file",
   "license": "MIT",
   "repository": "sindresorhus/write-pkg",
