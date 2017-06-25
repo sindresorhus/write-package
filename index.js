@@ -3,7 +3,7 @@ const path = require('path');
 const writeJsonFile = require('write-json-file');
 const sortKeys = require('sort-keys');
 
-const opts = {indent: 2};
+const opts = {detectIndent: true};
 
 const dependencyKeys = new Set([
 	'dependencies',
