@@ -2,7 +2,7 @@
 
 > Write a `package.json` file
 
-Writes atomically and creates directories for you as needed. Sorts dependencies when writing.
+Writes atomically and creates directories for you as needed. Sorts dependencies when writing. Preserves the indentation if the file already exists.
 
 
 ## Install

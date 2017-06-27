@@ -1,7 +1,10 @@
 'use strict';
+const fs = require('fs');
+const path = require('path');
 const test = require('ava');
 const tempfile = require('tempfile');
 const readPkg = require('read-pkg');
+const writeJsonFile = require('write-json-file');
 const m = require('.');
 
 const fixture = {
@@ -80,4 +83,32 @@ test('removes empty dependency properties sync', t => {
 	t.falsy(x.devDependencies);
 	t.falsy(x.optionalDependencies);
 	t.falsy(x.peerDependencies);
+});
+
+test('detect tab indent', async t => {
+	const tmp = path.join(tempfile(), 'package.json');
+	await writeJsonFile(tmp, {foo: true}, {indent: '\t'});
+	await m(tmp, {foo: true, bar: true, foobar: true}, {detectIndent: true});
+	t.is(fs.readFileSync(tmp, 'utf8'), '{\n\t"foo": true,\n\t"bar": true,\n\t"foobar": true\n}\n');
+});
+
+test('detect tab indent sync', async t => {
+	const tmp = path.join(tempfile(), 'package.json');
+	await writeJsonFile(tmp, {foo: true}, {indent: '\t'});
+	m.sync(tmp, {foo: true, bar: true, foobar: true}, {detectIndent: true});
+	t.is(fs.readFileSync(tmp, 'utf8'), '{\n\t"foo": true,\n\t"bar": true,\n\t"foobar": true\n}\n');
+});
+
+test('detect 2 spaces indent', async t => {
+	const tmp = path.join(tempfile(), 'package.json');
+	await writeJsonFile(tmp, {foo: true}, {indent: 2});
+	await m(tmp, {foo: true, bar: true, foobar: true}, {detectIndent: true});
+	t.is(fs.readFileSync(tmp, 'utf8'), '{\n  "foo": true,\n  "bar": true,\n  "foobar": true\n}\n');
+});
+
+test('detect 2 spaces indent sync', async t => {
+	const tmp = path.join(tempfile(), 'package.json');
+	await writeJsonFile(tmp, {foo: true}, {indent: 2});
+	m.sync(tmp, {foo: true, bar: true, foobar: true}, {detectIndent: true});
+	t.is(fs.readFileSync(tmp, 'utf8'), '{\n  "foo": true,\n  "bar": true,\n  "foobar": true\n}\n');
 });
