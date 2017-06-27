@@ -1,11 +1,10 @@
-'use strict';
-const fs = require('fs');
-const path = require('path');
-const test = require('ava');
-const tempfile = require('tempfile');
-const readPkg = require('read-pkg');
-const writeJsonFile = require('write-json-file');
-const m = require('.');
+import fs from 'fs';
+import path from 'path';
+import test from 'ava';
+import tempfile from 'tempfile';
+import readPkg from 'read-pkg';
+import writeJsonFile from 'write-json-file';
+import m from '.';
 
 const fixture = {
 	foo: true,

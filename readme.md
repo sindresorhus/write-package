@@ -8,7 +8,7 @@ Writes atomically and creates directories for you as needed. Sorts dependencies 
 ## Install
 
 ```
-$ npm install --save write-pkg
+$ npm install write-pkg
 ```
 
 
