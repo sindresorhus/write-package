@@ -3,8 +3,6 @@ const path = require('path');
 const writeJsonFile = require('write-json-file');
 const sortKeys = require('sort-keys');
 
-const opts = {detectIndent: true};
-
 const dependencyKeys = new Set([
 	'dependencies',
 	'devDependencies',
@@ -26,28 +24,34 @@ function normalize(pkg) {
 	return ret;
 }
 
-module.exports = (fp, data) => {
+module.exports = (fp, data, opts) => {
 	if (typeof fp !== 'string') {
+		opts = data;
 		data = fp;
 		fp = '.';
 	}
 
+	opts = Object.assign({normalize: true}, opts, {detectIndent: true});
+
 	fp = path.basename(fp) === 'package.json' ? fp : path.join(fp, 'package.json');
 
-	data = normalize(data);
+	data = opts.normalize ? normalize(data) : data;
 
 	return writeJsonFile(fp, data, opts);
 };
 
-module.exports.sync = (fp, data) => {
+module.exports.sync = (fp, data, opts) => {
 	if (typeof fp !== 'string') {
+		opts = data;
 		data = fp;
 		fp = '.';
 	}
 
+	opts = Object.assign({normalize: true}, opts, {detectIndent: true});
+
 	fp = path.basename(fp) === 'package.json' ? fp : path.join(fp, 'package.json');
 
-	data = normalize(data);
+	data = opts.normalize ? normalize(data) : data;
 
 	writeJsonFile.sync(fp, data, opts);
 };

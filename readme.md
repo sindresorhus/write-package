@@ -34,11 +34,11 @@ writePkg(path.join('unicorn', 'package.json'), {foo: true}).then(() => {
 
 ## API
 
-### writePkg([path], data)
+### writePkg([path], data, [options])
 
 Returns a `Promise`.
 
-### writePkg.sync([path], data)
+### writePkg.sync([path], data, [options])
 
 #### path
 
@@ -47,6 +47,16 @@ Default: `process.cwd()`
 
 Path to where the `package.json` file should be written or its directory.
 
+#### options
+
+Type: `Object`
+
+##### normalize
+
+Type: `boolean`<br>
+Default: `true`
+
+Remove empty `dependencies`, `devDependencies`, `optionalDependencies` and `peerDependencies` objects.
 
 ## Related
 
