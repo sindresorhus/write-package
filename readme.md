@@ -18,17 +18,16 @@ $ npm install write-pkg
 const path = require('path');
 const writePkg = require('write-pkg');
 
-writePkg({foo: true}).then(() => {
+(async () => {
+	await writePkg({foo: true});
 	console.log('done');
-});
 
-writePkg(__dirname, {foo: true}).then(() => {
+	await writePkg(__dirname, {foo: true});
 	console.log('done');
-});
 
-writePkg(path.join('unicorn', 'package.json'), {foo: true}).then(() => {
+	await writePkg(path.join('unicorn', 'package.json'), {foo: true});
 	console.log('done');
-});
+})();
 ```
 
 
@@ -57,6 +56,7 @@ Type: `boolean`<br>
 Default: `true`
 
 Remove empty `dependencies`, `devDependencies`, `optionalDependencies` and `peerDependencies` objects.
+
 
 ## Related
 
