@@ -62,7 +62,7 @@ const emptyPropFixture = {
 	peerDependencies: {}
 };
 
-test('removes empty dependency properties', async t => {
+test('removes empty dependency properties by default', async t => {
 	const tmp = tempfile();
 	await m(tmp, emptyPropFixture);
 	const x = await readPkg(tmp, {normalize: false});
@@ -73,7 +73,7 @@ test('removes empty dependency properties', async t => {
 	t.falsy(x.peerDependencies);
 });
 
-test('removes empty dependency properties sync', t => {
+test('removes empty dependency properties sync by default', t => {
 	const tmp = tempfile();
 	m.sync(tmp, emptyPropFixture);
 	const x = readPkg.sync(tmp, {normalize: false});
@@ -84,30 +84,52 @@ test('removes empty dependency properties sync', t => {
 	t.falsy(x.peerDependencies);
 });
 
+test('allow not removing empty dependency properties', async t => {
+	const tmp = tempfile();
+	await m(tmp, emptyPropFixture, {normalize: false});
+	const x = await readPkg(tmp, {normalize: false});
+	t.true(x.foo);
+	t.truthy(x.dependencies);
+	t.truthy(x.devDependencies);
+	t.truthy(x.optionalDependencies);
+	t.truthy(x.peerDependencies);
+});
+
+test('allow not removing empty dependency properties sync', t => {
+	const tmp = tempfile();
+	m.sync(tmp, emptyPropFixture, {normalize: false});
+	const x = readPkg.sync(tmp, {normalize: false});
+	t.true(x.foo);
+	t.truthy(x.dependencies);
+	t.truthy(x.devDependencies);
+	t.truthy(x.optionalDependencies);
+	t.truthy(x.peerDependencies);
+});
+
 test('detect tab indent', async t => {
 	const tmp = path.join(tempfile(), 'package.json');
 	await writeJsonFile(tmp, {foo: true}, {indent: '\t'});
-	await m(tmp, {foo: true, bar: true, foobar: true}, {detectIndent: true});
+	await m(tmp, {foo: true, bar: true, foobar: true});
 	t.is(fs.readFileSync(tmp, 'utf8'), '{\n\t"foo": true,\n\t"bar": true,\n\t"foobar": true\n}\n');
 });
 
 test('detect tab indent sync', async t => {
 	const tmp = path.join(tempfile(), 'package.json');
 	await writeJsonFile(tmp, {foo: true}, {indent: '\t'});
-	m.sync(tmp, {foo: true, bar: true, foobar: true}, {detectIndent: true});
+	m.sync(tmp, {foo: true, bar: true, foobar: true});
 	t.is(fs.readFileSync(tmp, 'utf8'), '{\n\t"foo": true,\n\t"bar": true,\n\t"foobar": true\n}\n');
 });
 
 test('detect 2 spaces indent', async t => {
 	const tmp = path.join(tempfile(), 'package.json');
 	await writeJsonFile(tmp, {foo: true}, {indent: 2});
-	await m(tmp, {foo: true, bar: true, foobar: true}, {detectIndent: true});
+	await m(tmp, {foo: true, bar: true, foobar: true});
 	t.is(fs.readFileSync(tmp, 'utf8'), '{\n  "foo": true,\n  "bar": true,\n  "foobar": true\n}\n');
 });
 
 test('detect 2 spaces indent sync', async t => {
 	const tmp = path.join(tempfile(), 'package.json');
 	await writeJsonFile(tmp, {foo: true}, {indent: 2});
-	m.sync(tmp, {foo: true, bar: true, foobar: true}, {detectIndent: true});
+	m.sync(tmp, {foo: true, bar: true, foobar: true});
 	t.is(fs.readFileSync(tmp, 'utf8'), '{\n  "foo": true,\n  "bar": true,\n  "foobar": true\n}\n');
 });
