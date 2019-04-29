@@ -24,14 +24,18 @@ function normalize(packageJson) {
 	return result;
 }
 
-module.exports = (filePath, data, options) => {
+module.exports = async (filePath, data, options) => {
 	if (typeof filePath !== 'string') {
 		options = data;
 		data = filePath;
 		filePath = '.';
 	}
 
-	options = {normalize: true, ...options, detectIndent: true};
+	options = {
+		normalize: true,
+		...options,
+		detectIndent: true
+	};
 
 	filePath = path.basename(filePath) === 'package.json' ? filePath : path.join(filePath, 'package.json');
 
@@ -47,7 +51,11 @@ module.exports.sync = (filePath, data, options) => {
 		filePath = '.';
 	}
 
-	options = {normalize: true, ...options, detectIndent: true};
+	options = {
+		normalize: true,
+		...options,
+		detectIndent: true
+	};
 
 	filePath = path.basename(filePath) === 'package.json' ? filePath : path.join(filePath, 'package.json');
 
