@@ -16,16 +16,16 @@ $ npm install write-pkg
 
 ```js
 const path = require('path');
-const writePkg = require('write-pkg');
+const writePackage = require('write-pkg');
 
 (async () => {
-	await writePkg({foo: true});
+	await writePackage({foo: true});
 	console.log('done');
 
-	await writePkg(__dirname, {foo: true});
+	await writePackage(__dirname, {foo: true});
 	console.log('done');
 
-	await writePkg(path.join('unicorn', 'package.json'), {foo: true});
+	await writePackage(path.join('unicorn', 'package.json'), {foo: true});
 	console.log('done');
 })();
 ```
@@ -33,11 +33,11 @@ const writePkg = require('write-pkg');
 
 ## API
 
-### writePkg([path], data, [options])
+### writePackage([path], data, [options])
 
 Returns a `Promise`.
 
-### writePkg.sync([path], data, [options])
+### writePackage.sync([path], data, [options])
 
 #### path
 
@@ -48,7 +48,7 @@ Path to where the `package.json` file should be written or its directory.
 
 #### options
 
-Type: `Object`
+Type: `object`
 
 ##### normalize
 

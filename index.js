@@ -10,48 +10,48 @@ const dependencyKeys = new Set([
 	'peerDependencies'
 ]);
 
-function normalize(pkg) {
-	const ret = {};
+function normalize(packageJson) {
+	const result = {};
 
-	for (const key of Object.keys(pkg)) {
+	for (const key of Object.keys(packageJson)) {
 		if (!dependencyKeys.has(key)) {
-			ret[key] = pkg[key];
-		} else if (Object.keys(pkg[key]).length !== 0) {
-			ret[key] = sortKeys(pkg[key]);
+			result[key] = packageJson[key];
+		} else if (Object.keys(packageJson[key]).length !== 0) {
+			result[key] = sortKeys(packageJson[key]);
 		}
 	}
 
-	return ret;
+	return result;
 }
 
-module.exports = (fp, data, opts) => {
-	if (typeof fp !== 'string') {
-		opts = data;
-		data = fp;
-		fp = '.';
+module.exports = (filePath, data, options) => {
+	if (typeof filePath !== 'string') {
+		options = data;
+		data = filePath;
+		filePath = '.';
 	}
 
-	opts = Object.assign({normalize: true}, opts, {detectIndent: true});
+	options = {normalize: true, ...options, detectIndent: true};
 
-	fp = path.basename(fp) === 'package.json' ? fp : path.join(fp, 'package.json');
+	filePath = path.basename(filePath) === 'package.json' ? filePath : path.join(filePath, 'package.json');
 
-	data = opts.normalize ? normalize(data) : data;
+	data = options.normalize ? normalize(data) : data;
 
-	return writeJsonFile(fp, data, opts);
+	return writeJsonFile(filePath, data, options);
 };
 
-module.exports.sync = (fp, data, opts) => {
-	if (typeof fp !== 'string') {
-		opts = data;
-		data = fp;
-		fp = '.';
+module.exports.sync = (filePath, data, options) => {
+	if (typeof filePath !== 'string') {
+		options = data;
+		data = filePath;
+		filePath = '.';
 	}
 
-	opts = Object.assign({normalize: true}, opts, {detectIndent: true});
+	options = {normalize: true, ...options, detectIndent: true};
 
-	fp = path.basename(fp) === 'package.json' ? fp : path.join(fp, 'package.json');
+	filePath = path.basename(filePath) === 'package.json' ? filePath : path.join(filePath, 'package.json');
 
-	data = opts.normalize ? normalize(data) : data;
+	data = options.normalize ? normalize(data) : data;
 
-	writeJsonFile.sync(fp, data, opts);
+	writeJsonFile.sync(filePath, data, options);
 };
