@@ -33,11 +33,11 @@ const writePackage = require('write-pkg');
 
 ## API
 
-### writePackage([path], data, [options])
+### writePackage(path?, data, options?)
 
 Returns a `Promise`.
 
-### writePackage.sync([path], data, [options])
+### writePackage.sync(path?, data, options?)
 
 #### path
 
@@ -64,6 +64,14 @@ Remove empty `dependencies`, `devDependencies`, `optionalDependencies` and `peer
 - [write-json-file](https://github.com/sindresorhus/write-json-file) - Stringify and write JSON to a file atomically
 
 
-## License
+---
 
-MIT © [Sindre Sorhus](https://sindresorhus.com)
+<div align="center">
+	<b>
+		<a href="https://tidelift.com/subscription/pkg/npm-write-pkg?utm_source=npm-write-pkg&utm_medium=referral&utm_campaign=readme">Get professional support for this package with a Tidelift subscription</a>
+	</b>
+	<br>
+	<sub>
+		Tidelift helps make open source sustainable for maintainers while giving companies<br>assurances about security, maintenance, and licensing for their dependencies.
+	</sub>
+</div>
