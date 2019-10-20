@@ -33,8 +33,8 @@ module.exports = async (filePath, data, options) => {
 
 	options = {
 		normalize: true,
-		...options,
-		detectIndent: true
+		detectIndent: true,
+		...options
 	};
 
 	filePath = path.basename(filePath) === 'package.json' ? filePath : path.join(filePath, 'package.json');
@@ -53,8 +53,8 @@ module.exports.sync = (filePath, data, options) => {
 
 	options = {
 		normalize: true,
-		...options,
-		detectIndent: true
+		detectIndent: true,
+		...options
 	};
 
 	filePath = path.basename(filePath) === 'package.json' ? filePath : path.join(filePath, 'package.json');
