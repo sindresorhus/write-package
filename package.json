@@ -29,9 +29,9 @@
 		"package"
 	],
 	"dependencies": {
-		"sort-keys": "^2.0.0",
-		"type-fest": "^0.4.1",
-		"write-json-file": "^3.2.0"
+		"sort-keys": "^4.0.0",
+		"type-fest": "^0.16.0",
+		"write-json-file": "^4.0.0"
 	},
 	"devDependencies": {
 		"ava": "^1.4.1",
