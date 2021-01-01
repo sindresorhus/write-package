@@ -1,4 +1,4 @@
-# write-pkg [![Build Status](https://travis-ci.org/sindresorhus/write-pkg.svg?branch=master)](https://travis-ci.org/sindresorhus/write-pkg)
+# write-pkg
 
 > Write a `package.json` file
 
