@@ -4,32 +4,24 @@
 
 Writes atomically and creates directories for you as needed. Sorts dependencies when writing. Preserves the indentation if the file already exists.
 
-
 ## Install
 
 ```
 $ npm install write-pkg
 ```
 
-
 ## Usage
 
 ```js
-const path = require('path');
-const writePackage = require('write-pkg');
+import path from 'node:path';
+import {writePackage} from 'write-pkg';
 
-(async () => {
-	await writePackage({foo: true});
-	console.log('done');
+await writePackage({foo: true});
+console.log('done');
 
-	await writePackage(__dirname, {foo: true});
-	console.log('done');
-
-	await writePackage(path.join('unicorn', 'package.json'), {foo: true});
-	console.log('done');
-})();
+await writePackage(path.join('unicorn', 'package.json'), {foo: true});
+console.log('done');
 ```
-
 
 ## API
 
@@ -37,14 +29,14 @@ const writePackage = require('write-pkg');
 
 Returns a `Promise`.
 
-### writePackage.sync(path?, data, options?)
+### writePackageSync(path?, data, options?)
 
 #### path
 
-Type: `string`<br>
+Type: `string`\
 Default: `process.cwd()`
 
-Path to where the `package.json` file should be written or its directory.
+The path to where the `package.json` file should be written or its directory.
 
 #### options
 
@@ -52,11 +44,10 @@ Type: `object`
 
 ##### normalize
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `true`
 
 Remove empty `dependencies`, `devDependencies`, `optionalDependencies` and `peerDependencies` objects.
-
 
 ## write-pkg for enterprise
 

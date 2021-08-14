@@ -1,68 +1,54 @@
 import {JsonObject} from 'type-fest';
 
-declare namespace writePackage {
-	interface Options {
-		/**
-		Remove empty `dependencies`, `devDependencies`, `optionalDependencies` and `peerDependencies` objects.
+export interface Options {
+	/**
+	Remove empty `dependencies`, `devDependencies`, `optionalDependencies` and `peerDependencies` objects.
 
-		@default true
-		*/
-		readonly normalize?: boolean;
-	}
+	@default true
+	*/
+	readonly normalize?: boolean;
 }
 
-declare const writePackage: {
-	/**
-	Write a `package.json` file.
+/**
+Write a `package.json` file.
 
-	Writes atomically and creates directories for you as needed. Sorts dependencies when writing. Preserves the indentation if the file already exists.
+Writes atomically and creates directories for you as needed. Sorts dependencies when writing. Preserves the indentation if the file already exists.
 
-	@param path - Path to where the `package.json` file should be written or its directory.
+@param path - The path to where the `package.json` file should be written or its directory.
 
-	@example
-	```
-	import * as path from 'path';
-	import writePackage = require('write-pkg');
+@example
+```
+import path from 'node:path';
+import {writePackage} from 'write-pkg';
 
-	(async () => {
-		await writePackage({foo: true});
-		console.log('done');
+await writePackage({foo: true});
+console.log('done');
 
-		await writePackage(__dirname, {foo: true});
-		console.log('done');
+await writePackage(path.join('unicorn', 'package.json'), {foo: true});
+console.log('done');
+```
+*/
+export function writePackage(path: string, data: JsonObject, options?: Options): Promise<void>;
+export function writePackage(data: JsonObject, options?: Options): Promise<void>;
 
-		await writePackage(path.join('unicorn', 'package.json'), {foo: true});
-		console.log('done');
-	})();
-	```
-	*/
-	(path: string, data: JsonObject, options?: writePackage.Options): Promise<void>;
-	(data: JsonObject, options?: writePackage.Options): Promise<void>;
+/**
+Synchronously write a `package.json` file.
 
-	/**
-	Synchronously write a `package.json` file.
+Writes atomically and creates directories for you as needed. Sorts dependencies when writing. Preserves the indentation if the file already exists.
 
-	Writes atomically and creates directories for you as needed. Sorts dependencies when writing. Preserves the indentation if the file already exists.
+@param path - The path to where the `package.json` file should be written or its directory.
 
-	@param path - Path to where the `package.json` file should be written or its directory.
+@example
+```
+import path from 'node:path';
+import {writePackageSync} from 'write-pkg';
 
-	@example
-	```
-	import * as path from 'path';
-	import writePackage = require('write-pkg');
+writePackageSync({foo: true});
+console.log('done');
 
-	writePackage.sync({foo: true});
-	console.log('done');
-
-	writePackage.sync(__dirname, {foo: true});
-	console.log('done');
-
-	writePackage.sync(path.join('unicorn', 'package.json'), {foo: true});
-	console.log('done');
-	```
-	*/
-	sync(path: string, data: JsonObject, options?: writePackage.Options): void;
-	sync(data: JsonObject, options?: writePackage.Options): void;
-};
-
-export = writePackage;
+writePackageSync(path.join('unicorn', 'package.json'), {foo: true});
+console.log('done');
+```
+*/
+export function writePackageSync(path: string, data: JsonObject, options?: Options): void;
+export function writePackageSync(data: JsonObject, options?: Options): void;

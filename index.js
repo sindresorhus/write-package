@@ -1,13 +1,12 @@
-'use strict';
-const path = require('path');
-const writeJsonFile = require('write-json-file');
-const sortKeys = require('sort-keys');
+import path from 'node:path';
+import {writeJsonFile, writeJsonFileSync} from 'write-json-file';
+import sortKeys from 'sort-keys';
 
 const dependencyKeys = new Set([
 	'dependencies',
 	'devDependencies',
 	'optionalDependencies',
-	'peerDependencies'
+	'peerDependencies',
 ]);
 
 function normalize(packageJson) {
@@ -16,7 +15,7 @@ function normalize(packageJson) {
 	for (const key of Object.keys(packageJson)) {
 		if (!dependencyKeys.has(key)) {
 			result[key] = packageJson[key];
-		} else if (Object.keys(packageJson[key]).length !== 0) {
+		} else if (Object.keys(packageJson[key]).length > 0) {
 			result[key] = sortKeys(packageJson[key]);
 		}
 	}
@@ -24,7 +23,7 @@ function normalize(packageJson) {
 	return result;
 }
 
-module.exports = async (filePath, data, options) => {
+export async function writePackage(filePath, data, options) {
 	if (typeof filePath !== 'string') {
 		options = data;
 		data = filePath;
@@ -34,7 +33,7 @@ module.exports = async (filePath, data, options) => {
 	options = {
 		normalize: true,
 		...options,
-		detectIndent: true
+		detectIndent: true,
 	};
 
 	filePath = path.basename(filePath) === 'package.json' ? filePath : path.join(filePath, 'package.json');
@@ -42,9 +41,9 @@ module.exports = async (filePath, data, options) => {
 	data = options.normalize ? normalize(data) : data;
 
 	return writeJsonFile(filePath, data, options);
-};
+}
 
-module.exports.sync = (filePath, data, options) => {
+export function writePackageSync(filePath, data, options) {
 	if (typeof filePath !== 'string') {
 		options = data;
 		data = filePath;
@@ -54,12 +53,12 @@ module.exports.sync = (filePath, data, options) => {
 	options = {
 		normalize: true,
 		...options,
-		detectIndent: true
+		detectIndent: true,
 	};
 
 	filePath = path.basename(filePath) === 'package.json' ? filePath : path.join(filePath, 'package.json');
 
 	data = options.normalize ? normalize(data) : data;
 
-	writeJsonFile.sync(filePath, data, options);
-};
+	writeJsonFileSync(filePath, data, options);
+}
