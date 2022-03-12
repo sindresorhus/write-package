@@ -1,6 +1,7 @@
 import {JsonObject} from 'type-fest';
+import {Options as WriteJsonFileOptions} from 'write-json-file';
 
-export interface Options {
+export interface Options extends Omit<WriteJsonFileOptions, 'detectIndent'> {
 	/**
 	Remove empty `dependencies`, `devDependencies`, `optionalDependencies` and `peerDependencies` objects.
 
