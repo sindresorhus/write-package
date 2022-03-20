@@ -2,6 +2,17 @@ import {JsonObject} from 'type-fest';
 
 export interface Options {
 	/**
+	The indentation to use for new files.
+
+	Accepts `'\t'` for tab indentation or a number of spaces.
+
+	If the file already exists, the existing indentation will be used.
+
+	Default: Auto-detected or `'\t'`
+	*/
+	readonly indent?: string | number;
+
+	/**
 	Remove empty `dependencies`, `devDependencies`, `optionalDependencies` and `peerDependencies` objects.
 
 	@default true
