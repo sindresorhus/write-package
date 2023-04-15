@@ -4,7 +4,8 @@ import test from 'ava';
 import {temporaryDirectory} from 'tempy';
 import {readPackage, readPackageSync} from 'read-pkg';
 import {writeJsonFile} from 'write-json-file';
-import {writePackage, writePackageSync} from './index.js';
+import {pick} from 'object-pickby';
+import {writePackage, writePackageSync, addPackageDependencies, addPackageDependenciesSync} from './index.js';
 
 const fixture = {
 	foo: true,
@@ -62,7 +63,7 @@ const emptyPropFixture = {
 	peerDependencies: {},
 };
 
-test('removes empty dependency properties by default', async t => {
+test('async - removes empty dependency properties by default', async t => {
 	const temporary = temporaryDirectory();
 	await writePackage(temporary, emptyPropFixture);
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
@@ -73,7 +74,7 @@ test('removes empty dependency properties by default', async t => {
 	t.falsy(packageJson.peerDependencies);
 });
 
-test('removes empty dependency properties sync by default', t => {
+test('async - removes empty dependency properties sync by default', t => {
 	const temporary = temporaryDirectory();
 	writePackageSync(temporary, emptyPropFixture);
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
@@ -84,7 +85,7 @@ test('removes empty dependency properties sync by default', t => {
 	t.falsy(packageJson.peerDependencies);
 });
 
-test('allow not removing empty dependency properties', async t => {
+test('async - allow not removing empty dependency properties', async t => {
 	const temporary = temporaryDirectory();
 	await writePackage(temporary, emptyPropFixture, {normalize: false});
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
@@ -95,7 +96,7 @@ test('allow not removing empty dependency properties', async t => {
 	t.truthy(packageJson.peerDependencies);
 });
 
-test('allow not removing empty dependency properties sync', t => {
+test('sync - allow not removing empty dependency properties', t => {
 	const temporary = temporaryDirectory();
 	writePackageSync(temporary, emptyPropFixture, {normalize: false});
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
@@ -106,7 +107,7 @@ test('allow not removing empty dependency properties sync', t => {
 	t.truthy(packageJson.peerDependencies);
 });
 
-test('detect tab indent', async t => {
+test('async - detect tab indent', async t => {
 	const temporary = path.join(temporaryDirectory(), 'package.json');
 	await writeJsonFile(temporary, {foo: true}, {indent: '\t'});
 	await writePackage(temporary, {foo: true, bar: true, foobar: true});
@@ -116,7 +117,7 @@ test('detect tab indent', async t => {
 	);
 });
 
-test('detect tab indent sync', async t => {
+test('sync - detect tab indent', async t => {
 	const temporary = path.join(temporaryDirectory(), 'package.json');
 	await writeJsonFile(temporary, {foo: true}, {indent: '\t'});
 	writePackageSync(temporary, {foo: true, bar: true, foobar: true});
@@ -126,7 +127,7 @@ test('detect tab indent sync', async t => {
 	);
 });
 
-test('detect 2 spaces indent', async t => {
+test('async - detect 2 spaces indent', async t => {
 	const temporary = path.join(temporaryDirectory(), 'package.json');
 	await writeJsonFile(temporary, {foo: true}, {indent: 2});
 	await writePackage(temporary, {foo: true, bar: true, foobar: true});
@@ -136,7 +137,7 @@ test('detect 2 spaces indent', async t => {
 	);
 });
 
-test('detect 2 spaces indent sync', async t => {
+test('sync - detect 2 spaces indent', async t => {
 	const temporary = path.join(temporaryDirectory(), 'package.json');
 	await writeJsonFile(temporary, {foo: true}, {indent: 2});
 	writePackageSync(temporary, {foo: true, bar: true, foobar: true});
@@ -144,4 +145,179 @@ test('detect 2 spaces indent sync', async t => {
 		fs.readFileSync(temporary, 'utf8'),
 		'{\n  "foo": true,\n  "bar": true,\n  "foobar": true\n}\n',
 	);
+});
+
+const addFixture = {
+	dependencies: {
+		baz: '1.0.0',
+	},
+	devDependencies: {
+		baz: '1.0.0',
+	},
+	optionalDependencies: {
+		baz: '1.0.0',
+	},
+	peerDependencies: {
+		baz: '1.0.0',
+	},
+};
+
+test('addPackageDependencies - async', async t => {
+	const temporary = temporaryDirectory();
+	await writePackage(temporary, fixture);
+	await addPackageDependencies(temporary, addFixture.dependencies);
+	const packageJson = await readPackage({cwd: temporary, normalize: false});
+
+	t.deepEqual(Object.keys(packageJson.dependencies), ['bar', 'baz', 'foo']);
+	t.true(packageJson.foo);
+
+	t.deepEqual(Object.keys(packageJson.scripts), ['b', 'a']);
+	t.deepEqual(Object.keys(packageJson.devDependencies), ['bar', 'foo']);
+	t.deepEqual(Object.keys(packageJson.optionalDependencies), ['bar', 'foo']);
+	t.deepEqual(Object.keys(packageJson.peerDependencies), ['bar', 'foo']);
+});
+
+test('addPackageDependencies - async - multiple types', async t => {
+	const temporary = temporaryDirectory();
+	await writePackage(temporary, fixture);
+	await addPackageDependencies(temporary, addFixture);
+	const packageJson = await readPackage({cwd: temporary, normalize: false});
+
+	t.true(packageJson.foo);
+	t.deepEqual(Object.keys(packageJson.scripts), ['b', 'a']);
+	t.deepEqual(Object.keys(packageJson.dependencies), ['bar', 'baz', 'foo']);
+	t.deepEqual(Object.keys(packageJson.devDependencies), ['bar', 'baz', 'foo']);
+	t.deepEqual(Object.keys(packageJson.optionalDependencies), ['bar', 'baz', 'foo']);
+	t.deepEqual(Object.keys(packageJson.peerDependencies), ['bar', 'baz', 'foo']);
+});
+
+test('addPackageDependencies - async - two types', async t => {
+	const temporary = temporaryDirectory();
+	await writePackage(temporary, fixture);
+	await addPackageDependencies(temporary, pick(addFixture, ['dependencies', 'devDependencies']));
+	const packageJson = await readPackage({cwd: temporary, normalize: false});
+
+	t.true(packageJson.foo);
+	t.deepEqual(Object.keys(packageJson.scripts), ['b', 'a']);
+	t.deepEqual(Object.keys(packageJson.dependencies), ['bar', 'baz', 'foo']);
+	t.deepEqual(Object.keys(packageJson.devDependencies), ['bar', 'baz', 'foo']);
+	t.deepEqual(Object.keys(packageJson.optionalDependencies), ['bar', 'foo']);
+	t.deepEqual(Object.keys(packageJson.peerDependencies), ['bar', 'foo']);
+});
+
+test('addPackageDependencies - async - two types w/ empty', async t => {
+	const temporary = temporaryDirectory();
+	await writePackage(temporary, pick(fixture, ['foo', 'scripts', 'dependencies', 'devDependencies']));
+	await addPackageDependencies(temporary, pick(addFixture, ['dependencies', 'devDependencies']));
+	const packageJson = await readPackage({cwd: temporary, normalize: false});
+
+	t.true(packageJson.foo);
+	t.deepEqual(Object.keys(packageJson.scripts), ['b', 'a']);
+	t.deepEqual(Object.keys(packageJson.dependencies), ['bar', 'baz', 'foo']);
+	t.deepEqual(Object.keys(packageJson.devDependencies), ['bar', 'baz', 'foo']);
+	t.falsy(packageJson.optionalDependencies);
+	t.falsy(packageJson.peerDependencies);
+});
+
+test('addPackageDependencies - async - overwrite dependency', async t => {
+	const temporary = temporaryDirectory();
+	await writePackage(temporary, fixture);
+	await addPackageDependencies(temporary, {bar: '2.0.0'});
+	const packageJson = await readPackage({cwd: temporary, normalize: false});
+
+	t.deepEqual(Object.keys(packageJson.dependencies), ['bar', 'foo']);
+	t.is(packageJson.dependencies.bar, '2.0.0');
+});
+
+test('addPackageDependencies - async - allow not removing empty dependency properties', async t => {
+	const temporary = temporaryDirectory();
+	await writePackage(temporary, emptyPropFixture, {normalize: false});
+	await addPackageDependencies(temporary, pick(addFixture, ['dependencies', 'devDependencies']), {normalize: false});
+	const packageJson = await readPackage({cwd: temporary, normalize: false});
+
+	t.true(packageJson.foo);
+	t.deepEqual(Object.keys(packageJson.dependencies), ['baz']);
+	t.deepEqual(Object.keys(packageJson.devDependencies), ['baz']);
+	t.truthy(packageJson.optionalDependencies);
+	t.truthy(packageJson.peerDependencies);
+});
+
+test('addPackageDependencies - sync', t => {
+	const temporary = temporaryDirectory();
+	writePackageSync(temporary, fixture);
+	addPackageDependenciesSync(temporary, addFixture.dependencies);
+	const packageJson = readPackageSync({cwd: temporary, normalize: false});
+
+	t.deepEqual(Object.keys(packageJson.dependencies), ['bar', 'baz', 'foo']);
+	t.true(packageJson.foo);
+
+	t.deepEqual(Object.keys(packageJson.scripts), ['b', 'a']);
+	t.deepEqual(Object.keys(packageJson.devDependencies), ['bar', 'foo']);
+	t.deepEqual(Object.keys(packageJson.optionalDependencies), ['bar', 'foo']);
+	t.deepEqual(Object.keys(packageJson.peerDependencies), ['bar', 'foo']);
+});
+
+test('addPackageDependencies - sync - multiple types', t => {
+	const temporary = temporaryDirectory();
+	writePackageSync(temporary, fixture);
+	addPackageDependenciesSync(temporary, addFixture);
+	const packageJson = readPackageSync({cwd: temporary, normalize: false});
+
+	t.true(packageJson.foo);
+	t.deepEqual(Object.keys(packageJson.scripts), ['b', 'a']);
+	t.deepEqual(Object.keys(packageJson.dependencies), ['bar', 'baz', 'foo']);
+	t.deepEqual(Object.keys(packageJson.devDependencies), ['bar', 'baz', 'foo']);
+	t.deepEqual(Object.keys(packageJson.optionalDependencies), ['bar', 'baz', 'foo']);
+	t.deepEqual(Object.keys(packageJson.peerDependencies), ['bar', 'baz', 'foo']);
+});
+
+test('addPackageDependencies - sync - two types', t => {
+	const temporary = temporaryDirectory();
+	writePackageSync(temporary, fixture);
+	addPackageDependenciesSync(temporary, pick(addFixture, ['dependencies', 'devDependencies']));
+	const packageJson = readPackageSync({cwd: temporary, normalize: false});
+
+	t.true(packageJson.foo);
+	t.deepEqual(Object.keys(packageJson.scripts), ['b', 'a']);
+	t.deepEqual(Object.keys(packageJson.dependencies), ['bar', 'baz', 'foo']);
+	t.deepEqual(Object.keys(packageJson.devDependencies), ['bar', 'baz', 'foo']);
+	t.deepEqual(Object.keys(packageJson.optionalDependencies), ['bar', 'foo']);
+	t.deepEqual(Object.keys(packageJson.peerDependencies), ['bar', 'foo']);
+});
+
+test('addPackageDependencies - sync - two types w/ empty', t => {
+	const temporary = temporaryDirectory();
+	writePackageSync(temporary, pick(fixture, ['foo', 'scripts', 'dependencies', 'devDependencies']));
+	addPackageDependenciesSync(temporary, pick(addFixture, ['dependencies', 'devDependencies']));
+	const packageJson = readPackageSync({cwd: temporary, normalize: false});
+
+	t.true(packageJson.foo);
+	t.deepEqual(Object.keys(packageJson.scripts), ['b', 'a']);
+	t.deepEqual(Object.keys(packageJson.dependencies), ['bar', 'baz', 'foo']);
+	t.deepEqual(Object.keys(packageJson.devDependencies), ['bar', 'baz', 'foo']);
+	t.falsy(packageJson.optionalDependencies);
+	t.falsy(packageJson.peerDependencies);
+});
+
+test('addPackageDependencies - sync - overwrite dependency', t => {
+	const temporary = temporaryDirectory();
+	writePackageSync(temporary, fixture);
+	addPackageDependenciesSync(temporary, {bar: '2.0.0'});
+	const packageJson = readPackageSync({cwd: temporary, normalize: false});
+
+	t.deepEqual(Object.keys(packageJson.dependencies), ['bar', 'foo']);
+	t.is(packageJson.dependencies.bar, '2.0.0');
+});
+
+test('addPackageDependencies - sync - allow not removing empty dependency properties', t => {
+	const temporary = temporaryDirectory();
+	writePackageSync(temporary, emptyPropFixture, {normalize: false});
+	addPackageDependenciesSync(temporary, pick(addFixture, ['dependencies', 'devDependencies']), {normalize: false});
+	const packageJson = readPackageSync({cwd: temporary, normalize: false});
+
+	t.true(packageJson.foo);
+	t.deepEqual(Object.keys(packageJson.dependencies), ['baz']);
+	t.deepEqual(Object.keys(packageJson.devDependencies), ['baz']);
+	t.truthy(packageJson.optionalDependencies);
+	t.truthy(packageJson.peerDependencies);
 });
