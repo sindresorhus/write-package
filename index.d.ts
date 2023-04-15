@@ -1,6 +1,6 @@
-import {JsonObject} from 'type-fest';
+import {type JsonObject} from 'type-fest';
 
-export interface Options {
+export type Options = {
 	/**
 	The indentation to use for new files.
 
@@ -18,7 +18,7 @@ export interface Options {
 	@default true
 	*/
 	readonly normalize?: boolean;
-}
+};
 
 /**
 Write a `package.json` file.
