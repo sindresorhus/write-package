@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import test from 'ava';
-import tempfile from 'tempfile';
+import {temporaryDirectory} from 'tempy';
 import {readPackage, readPackageSync} from 'read-pkg';
 import {writeJsonFile} from 'write-json-file';
 import {writePackage, writePackageSync} from './index.js';
@@ -31,7 +31,7 @@ const fixture = {
 };
 
 test('async', async t => {
-	const temporary = tempfile();
+	const temporary = temporaryDirectory();
 	await writePackage(temporary, fixture);
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
 	t.true(packageJson.foo);
@@ -43,7 +43,7 @@ test('async', async t => {
 });
 
 test('sync', t => {
-	const temporary = tempfile();
+	const temporary = temporaryDirectory();
 	writePackageSync(temporary, fixture);
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
 	t.true(packageJson.foo);
@@ -63,7 +63,7 @@ const emptyPropFixture = {
 };
 
 test('removes empty dependency properties by default', async t => {
-	const temporary = tempfile();
+	const temporary = temporaryDirectory();
 	await writePackage(temporary, emptyPropFixture);
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
 	t.true(packageJson.foo);
@@ -74,7 +74,7 @@ test('removes empty dependency properties by default', async t => {
 });
 
 test('removes empty dependency properties sync by default', t => {
-	const temporary = tempfile();
+	const temporary = temporaryDirectory();
 	writePackageSync(temporary, emptyPropFixture);
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
 	t.true(packageJson.foo);
@@ -85,7 +85,7 @@ test('removes empty dependency properties sync by default', t => {
 });
 
 test('allow not removing empty dependency properties', async t => {
-	const temporary = tempfile();
+	const temporary = temporaryDirectory();
 	await writePackage(temporary, emptyPropFixture, {normalize: false});
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
 	t.true(packageJson.foo);
@@ -96,7 +96,7 @@ test('allow not removing empty dependency properties', async t => {
 });
 
 test('allow not removing empty dependency properties sync', t => {
-	const temporary = tempfile();
+	const temporary = temporaryDirectory();
 	writePackageSync(temporary, emptyPropFixture, {normalize: false});
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
 	t.true(packageJson.foo);
@@ -107,7 +107,7 @@ test('allow not removing empty dependency properties sync', t => {
 });
 
 test('detect tab indent', async t => {
-	const temporary = path.join(tempfile(), 'package.json');
+	const temporary = path.join(temporaryDirectory(), 'package.json');
 	await writeJsonFile(temporary, {foo: true}, {indent: '\t'});
 	await writePackage(temporary, {foo: true, bar: true, foobar: true});
 	t.is(
@@ -117,7 +117,7 @@ test('detect tab indent', async t => {
 });
 
 test('detect tab indent sync', async t => {
-	const temporary = path.join(tempfile(), 'package.json');
+	const temporary = path.join(temporaryDirectory(), 'package.json');
 	await writeJsonFile(temporary, {foo: true}, {indent: '\t'});
 	writePackageSync(temporary, {foo: true, bar: true, foobar: true});
 	t.is(
@@ -127,7 +127,7 @@ test('detect tab indent sync', async t => {
 });
 
 test('detect 2 spaces indent', async t => {
-	const temporary = path.join(tempfile(), 'package.json');
+	const temporary = path.join(temporaryDirectory(), 'package.json');
 	await writeJsonFile(temporary, {foo: true}, {indent: 2});
 	await writePackage(temporary, {foo: true, bar: true, foobar: true});
 	t.is(
@@ -137,7 +137,7 @@ test('detect 2 spaces indent', async t => {
 });
 
 test('detect 2 spaces indent sync', async t => {
-	const temporary = path.join(tempfile(), 'package.json');
+	const temporary = path.join(temporaryDirectory(), 'package.json');
 	await writeJsonFile(temporary, {foo: true}, {indent: 2});
 	writePackageSync(temporary, {foo: true, bar: true, foobar: true});
 	t.is(
