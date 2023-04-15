@@ -23,7 +23,7 @@ function normalize(packageJson) {
 	return result;
 }
 
-export async function writePackage(filePath, data, options) {
+function sanitize(filePath, data, options) {
 	if (typeof filePath !== 'string') {
 		options = data;
 		data = filePath;
@@ -40,25 +40,15 @@ export async function writePackage(filePath, data, options) {
 
 	data = options.normalize ? normalize(data) : data;
 
+	return {filePath, data, options};
+}
+
+export async function writePackage(filePath, data, options) {
+	({filePath, data, options} = sanitize(filePath, data, options));
 	return writeJsonFile(filePath, data, options);
 }
 
 export function writePackageSync(filePath, data, options) {
-	if (typeof filePath !== 'string') {
-		options = data;
-		data = filePath;
-		filePath = '.';
-	}
-
-	options = {
-		normalize: true,
-		...options,
-		detectIndent: true,
-	};
-
-	filePath = path.basename(filePath) === 'package.json' ? filePath : path.join(filePath, 'package.json');
-
-	data = options.normalize ? normalize(data) : data;
-
+	({filePath, data, options} = sanitize(filePath, data, options));
 	writeJsonFileSync(filePath, data, options);
 }
