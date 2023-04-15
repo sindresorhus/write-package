@@ -1,4 +1,4 @@
-import {type JsonObject} from 'type-fest';
+import type {JsonObject, PackageJson} from 'type-fest';
 
 export type Options = {
 	/**
@@ -63,3 +63,15 @@ console.log('done');
 */
 export function writePackageSync(path: string, data: JsonObject, options?: Options): void;
 export function writePackageSync(data: JsonObject, options?: Options): void;
+
+type DependencyKeys =
+	| 'dependencies'
+	| 'devDependencies'
+	| 'optionalDependencies'
+	| 'peerDependencies';
+
+export function addPackageDependencies(path: string, dependencies: Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>, options?: Options): Promise<void>;
+export function addPackageDependencies(dependencies: Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>, options?: Options): Promise<void>;
+
+export function addPackageDependenciesSync(path: string, dependencies: Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>, options?: Options): void;
+export function addPackageDependenciesSync(dependencies: Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>, options?: Options): void;

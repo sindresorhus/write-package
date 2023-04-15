@@ -77,6 +77,7 @@ function mergeDependencies(pkg, dependencies, options) {
 export async function addPackageDependencies(filePath, dependencies, options) {
 	({filePath, data: dependencies, options} = sanitize(filePath, dependencies, options, false));
 
+	// TODO: if no pkg, should it make one? or just error?
 	let pkg = await readPackage({cwd: path.dirname(filePath)});
 	pkg = mergeDependencies(pkg, dependencies, options);
 
