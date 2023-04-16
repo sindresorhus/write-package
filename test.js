@@ -31,6 +31,8 @@ const fixture = {
 	},
 };
 
+// TODO: test without specifying temporary -> use esmock
+
 test('async', async t => {
 	const temporary = temporaryDirectory();
 	await writePackage(temporary, fixture);
@@ -205,7 +207,7 @@ test('addPackageDependencies - async - two types', async t => {
 	t.deepEqual(Object.keys(packageJson.peerDependencies), ['bar', 'foo']);
 });
 
-test('addPackageDependencies - async - two types w/ empty', async t => {
+test('addPackageDependencies - async - two types with empty', async t => {
 	const temporary = temporaryDirectory();
 	await writePackage(temporary, pick(fixture, ['foo', 'scripts', 'dependencies', 'devDependencies']));
 	await addPackageDependencies(temporary, pick(addFixture, ['dependencies', 'devDependencies']));
@@ -285,7 +287,7 @@ test('addPackageDependencies - sync - two types', t => {
 	t.deepEqual(Object.keys(packageJson.peerDependencies), ['bar', 'foo']);
 });
 
-test('addPackageDependencies - sync - two types w/ empty', t => {
+test('addPackageDependencies - sync - two types with empty', t => {
 	const temporary = temporaryDirectory();
 	writePackageSync(temporary, pick(fixture, ['foo', 'scripts', 'dependencies', 'devDependencies']));
 	addPackageDependenciesSync(temporary, pick(addFixture, ['dependencies', 'devDependencies']));
