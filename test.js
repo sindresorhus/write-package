@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+import fs, {promises as fsPromises} from 'node:fs';
 import path from 'node:path';
 import test from 'ava';
 import {temporaryDirectory} from 'tempy';
@@ -114,7 +114,7 @@ test('async - detect tab indent', async t => {
 	await writeJsonFile(temporary, {foo: true}, {indent: '\t'});
 	await writePackage(temporary, {foo: true, bar: true, foobar: true});
 	t.is(
-		fs.readFileSync(temporary, 'utf8'),
+		await fsPromises.readFile(temporary, 'utf8'),
 		'{\n\t"foo": true,\n\t"bar": true,\n\t"foobar": true\n}\n',
 	);
 });
@@ -124,7 +124,7 @@ test('sync - detect tab indent', async t => {
 	await writeJsonFile(temporary, {foo: true}, {indent: '\t'});
 	writePackageSync(temporary, {foo: true, bar: true, foobar: true});
 	t.is(
-		fs.readFileSync(temporary, 'utf8'),
+		await fsPromises.readFile(temporary, 'utf8'),
 		'{\n\t"foo": true,\n\t"bar": true,\n\t"foobar": true\n}\n',
 	);
 });
@@ -134,7 +134,7 @@ test('async - detect 2 spaces indent', async t => {
 	await writeJsonFile(temporary, {foo: true}, {indent: 2});
 	await writePackage(temporary, {foo: true, bar: true, foobar: true});
 	t.is(
-		fs.readFileSync(temporary, 'utf8'),
+		await fsPromises.readFile(temporary, 'utf8'),
 		'{\n  "foo": true,\n  "bar": true,\n  "foobar": true\n}\n',
 	);
 });
@@ -358,4 +358,26 @@ test('addPackageDependencies - sync - create package.json if one does not exist'
 	t.deepEqual(Object.keys(optionalDependencies), ['baz']);
 	t.deepEqual(Object.keys(peerDependencies), ['baz']);
 	t.true(Object.keys(rest).length === 0, 'package.json had additional fields!');
+});
+
+const missingEndingBraceFixture = '{"name": "foo", "dependencies": {"bar": "1.0.0"}';
+
+test('addPackageDependencies - async - invalid package.json', async t => {
+	const temporary = temporaryDirectory();
+	await fsPromises.writeFile(path.join(temporary, 'package.json'), missingEndingBraceFixture);
+
+	await t.throwsAsync(
+		addPackageDependencies(temporary, addFixture.dependencies),
+		{name: 'JSONError'},
+	);
+});
+
+test('addPackageDependencies - sync - invalid package.json', t => {
+	const temporary = temporaryDirectory();
+	fs.writeFileSync(path.join(temporary, 'package.json'), missingEndingBraceFixture);
+
+	t.throws(
+		() => addPackageDependenciesSync(temporary, addFixture.dependencies),
+		{name: 'JSONError'},
+	);
 });
