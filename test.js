@@ -244,6 +244,24 @@ test('addPackageDependencies - async - allow not removing empty dependency prope
 	t.truthy(packageJson.peerDependencies);
 });
 
+test('addPackageDependencies - async - create package.json if one does not exist', async t => {
+	const temporary = temporaryDirectory();
+	await addPackageDependencies(temporary, addFixture);
+	const {
+		dependencies,
+		devDependencies,
+		optionalDependencies,
+		peerDependencies,
+		...rest
+	} = await readPackage({cwd: temporary, normalize: false});
+
+	t.deepEqual(Object.keys(dependencies), ['baz']);
+	t.deepEqual(Object.keys(devDependencies), ['baz']);
+	t.deepEqual(Object.keys(optionalDependencies), ['baz']);
+	t.deepEqual(Object.keys(peerDependencies), ['baz']);
+	t.true(Object.keys(rest).length === 0, 'package.json had additional fields!');
+});
+
 test('addPackageDependencies - sync', t => {
 	const temporary = temporaryDirectory();
 	writePackageSync(temporary, fixture);
@@ -322,4 +340,22 @@ test('addPackageDependencies - sync - allow not removing empty dependency proper
 	t.deepEqual(Object.keys(packageJson.devDependencies), ['baz']);
 	t.truthy(packageJson.optionalDependencies);
 	t.truthy(packageJson.peerDependencies);
+});
+
+test('addPackageDependencies - sync - create package.json if one does not exist', t => {
+	const temporary = temporaryDirectory();
+	addPackageDependenciesSync(temporary, addFixture);
+	const {
+		dependencies,
+		devDependencies,
+		optionalDependencies,
+		peerDependencies,
+		...rest
+	} = readPackageSync({cwd: temporary, normalize: false});
+
+	t.deepEqual(Object.keys(dependencies), ['baz']);
+	t.deepEqual(Object.keys(devDependencies), ['baz']);
+	t.deepEqual(Object.keys(optionalDependencies), ['baz']);
+	t.deepEqual(Object.keys(peerDependencies), ['baz']);
+	t.true(Object.keys(rest).length === 0, 'package.json had additional fields!');
 });

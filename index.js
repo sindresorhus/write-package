@@ -24,7 +24,7 @@ function normalize(packageJson) {
 	return result;
 }
 
-function sanitize(filePath, data, options, sanitizeData = true) {
+function sanitize(filePath, data, options, {sanitizeData = true} = {}) {
 	if (typeof filePath !== 'string') {
 		options = data;
 		data = filePath;
@@ -75,20 +75,41 @@ function mergeDependencies(pkg, dependencies, options) {
 }
 
 export async function addPackageDependencies(filePath, dependencies, options) {
-	({filePath, data: dependencies, options} = sanitize(filePath, dependencies, options, false));
+	({filePath, data: dependencies, options} = sanitize(filePath, dependencies, options, {sanitizeData: false}));
 
-	// TODO: if no pkg, should it make one? or just error?
-	let pkg = await readPackage({cwd: path.dirname(filePath)});
+	let pkg;
+
+	try {
+		pkg = await readPackage({cwd: path.dirname(filePath), normalize: false});
+	} catch (error) {
+		// 'package.json' doesn't exist
+		if (error.code === 'ENOENT') { // TODO: is this cross-platform?
+			return writePackage(filePath, dependencies, options);
+		}
+
+		throw error;
+	}
+
 	pkg = mergeDependencies(pkg, dependencies, options);
-
 	return writeJsonFile(filePath, pkg, options);
 }
 
 export function addPackageDependenciesSync(filePath, dependencies, options) {
-	({filePath, data: dependencies, options} = sanitize(filePath, dependencies, options, false));
+	({filePath, data: dependencies, options} = sanitize(filePath, dependencies, options, {sanitizeData: false}));
 
-	let pkg = readPackageSync({cwd: path.dirname(filePath)});
+	let pkg;
+
+	try {
+		pkg = readPackageSync({cwd: path.dirname(filePath), normalize: false});
+	} catch (error) {
+		// 'package.json' doesn't exist
+		if (error.code === 'ENOENT') { // TODO: is this cross-platform?
+			return writePackageSync(filePath, dependencies, options);
+		}
+
+		throw error;
+	}
+
 	pkg = mergeDependencies(pkg, dependencies, options);
-
 	writeJsonFileSync(filePath, pkg, options);
 }
