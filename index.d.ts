@@ -1,5 +1,7 @@
 import type {JsonObject, PackageJson} from 'type-fest';
 
+// TODO: make `data` be PackageJson | JsonObject
+
 export type Options = {
 	/**
 	The indentation to use for new files.
@@ -64,8 +66,6 @@ console.log('done');
 export function writePackageSync(path: string, data: JsonObject, options?: Options): void;
 export function writePackageSync(data: JsonObject, options?: Options): void;
 
-// TODO: make `data` use PackageJson type?
-
 /**
 Update a `package.json` file.
 
@@ -109,3 +109,15 @@ updatePackageSync({foo: false, bar: true});
 */
 export function updatePackageSync(path: string, data: JsonObject, options?: Options): void;
 export function updatePackageSync(data: JsonObject, options?: Options): void;
+
+type DependencyKeys =
+	| 'dependencies'
+	| 'devDependencies'
+	| 'optionalDependencies'
+	| 'peerDependencies';
+
+export function addPackageDependencies(path: string, dependencies: Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>, options?: Options): Promise<void>;
+export function addPackageDependencies(dependencies: Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>, options?: Options): Promise<void>;
+
+export function addPackageDependenciesSync(path: string, dependencies: Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>, options?: Options): void;
+export function addPackageDependenciesSync(dependencies: Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>, options?: Options): void;

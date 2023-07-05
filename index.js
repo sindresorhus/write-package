@@ -11,6 +11,8 @@ const dependencyKeys = new Set([
 	'peerDependencies',
 ]);
 
+const hasMultipleDependencyTypes = dependencies => Object.keys(dependencies).some(key => dependencyKeys.has(key));
+
 function normalize(packageJson) {
 	const result = {};
 
@@ -106,4 +108,16 @@ export function updatePackageSync(filePath, data, options) {
 	}
 
 	writeJsonFileSync(filePath, pkg, options);
+}
+
+export async function addPackageDependencies(filePath, dependencies, options) {
+	return hasMultipleDependencyTypes(dependencies)
+		? updatePackage(filePath, {...dependencies}, options)
+		: updatePackage(filePath, {dependencies}, options);
+}
+
+export function addPackageDependenciesSync(filePath, dependencies, options) {
+	return hasMultipleDependencyTypes(dependencies)
+		? updatePackageSync(filePath, {...dependencies}, options)
+		: updatePackageSync(filePath, {dependencies}, options);
 }
