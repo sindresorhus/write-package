@@ -2,6 +2,7 @@ import path from 'node:path';
 import {writeJsonFile, writeJsonFileSync} from 'write-json-file';
 import {readPackage, readPackageSync} from 'read-pkg';
 import sortKeys from 'sort-keys';
+import {deepmerge} from 'deepmerge-ts';
 
 const dependencyKeys = new Set([
 	'dependencies',
@@ -56,26 +57,8 @@ export function writePackageSync(filePath, data, options) {
 	writeJsonFileSync(filePath, data, options);
 }
 
-function mergeDependencies(pkg, dependencies, options) {
-	const hasMultipleDependencyTypes = Object.keys(dependencies).some(key => dependencyKeys.has(key));
-
-	if (hasMultipleDependencyTypes) {
-		for (const key of dependencyKeys) {
-			pkg[key] = {...pkg[key], ...dependencies[key]};
-		}
-	} else {
-		pkg.dependencies = {...pkg.dependencies, ...dependencies};
-	}
-
-	if (options.normalize) {
-		pkg = normalize(pkg);
-	}
-
-	return pkg;
-}
-
-export async function addPackageDependencies(filePath, dependencies, options) {
-	({filePath, data: dependencies, options} = sanitize(filePath, dependencies, options, {sanitizeData: false}));
+export async function updatePackage(filePath, data, options) {
+	({filePath, data, options} = sanitize(filePath, data, options));
 
 	let pkg;
 
@@ -83,19 +66,24 @@ export async function addPackageDependencies(filePath, dependencies, options) {
 		pkg = await readPackage({cwd: path.dirname(filePath), normalize: false});
 	} catch (error) {
 		// 'package.json' doesn't exist
-		if (error.code === 'ENOENT') { // TODO: is this cross-platform?
-			return writePackage(filePath, dependencies, options);
+		if (error.code === 'ENOENT') {
+			return writeJsonFile(filePath, data, options);
 		}
 
 		throw error;
 	}
 
-	pkg = mergeDependencies(pkg, dependencies, options);
+	pkg = deepmerge(pkg, data);
+
+	if (options.normalize) {
+		pkg = normalize(pkg);
+	}
+
 	return writeJsonFile(filePath, pkg, options);
 }
 
-export function addPackageDependenciesSync(filePath, dependencies, options) {
-	({filePath, data: dependencies, options} = sanitize(filePath, dependencies, options, {sanitizeData: false}));
+export function updatePackageSync(filePath, data, options) {
+	({filePath, data, options} = sanitize(filePath, data, options));
 
 	let pkg;
 
@@ -103,13 +91,19 @@ export function addPackageDependenciesSync(filePath, dependencies, options) {
 		pkg = readPackageSync({cwd: path.dirname(filePath), normalize: false});
 	} catch (error) {
 		// 'package.json' doesn't exist
-		if (error.code === 'ENOENT') { // TODO: is this cross-platform?
-			return writePackageSync(filePath, dependencies, options);
+		if (error.code === 'ENOENT') {
+			writeJsonFileSync(filePath, data, options);
+			return;
 		}
 
 		throw error;
 	}
 
-	pkg = mergeDependencies(pkg, dependencies, options);
+	pkg = deepmerge(pkg, data);
+
+	if (options.normalize) {
+		pkg = normalize(pkg);
+	}
+
 	writeJsonFileSync(filePath, pkg, options);
 }

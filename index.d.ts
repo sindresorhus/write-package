@@ -64,14 +64,9 @@ console.log('done');
 export function writePackageSync(path: string, data: JsonObject, options?: Options): void;
 export function writePackageSync(data: JsonObject, options?: Options): void;
 
-type DependencyKeys =
-	| 'dependencies'
-	| 'devDependencies'
-	| 'optionalDependencies'
-	| 'peerDependencies';
+// TODO: make `data` be PackageJson type?
+export function updatePackage(path: string, data: JsonObject, options?: Options): Promise<void>;
+export function updatePackage(data: JsonObject, options?: Options): Promise<void>;
 
-export function addPackageDependencies(path: string, dependencies: Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>, options?: Options): Promise<void>;
-export function addPackageDependencies(dependencies: Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>, options?: Options): Promise<void>;
-
-export function addPackageDependenciesSync(path: string, dependencies: Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>, options?: Options): void;
-export function addPackageDependenciesSync(dependencies: Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>, options?: Options): void;
+export function updatePackageSync(path: string, data: JsonObject, options?: Options): void;
+export function updatePackageSync(data: JsonObject, options?: Options): void;
