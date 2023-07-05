@@ -64,9 +64,48 @@ console.log('done');
 export function writePackageSync(path: string, data: JsonObject, options?: Options): void;
 export function writePackageSync(data: JsonObject, options?: Options): void;
 
-// TODO: make `data` be PackageJson type?
+// TODO: make `data` use PackageJson type?
+
+/**
+Update a `package.json` file.
+
+Writes atomically and creates directories for you as needed. Sorts dependencies when writing. Preserves the indentation if the file already exists.
+
+@param path - The path to where the `package.json` file should be written or its directory.
+
+@example
+```
+import path from 'node:path';
+import {updatePackage} from 'write-pkg';
+
+await updatePackage({foo: true});
+//=> { "foo": true }
+
+await updatePackage({foo: false, bar: true});
+//=> { "foo": false, "bar": true }
+```
+*/
 export function updatePackage(path: string, data: JsonObject, options?: Options): Promise<void>;
 export function updatePackage(data: JsonObject, options?: Options): Promise<void>;
 
+/**
+Update a `package.json` file.
+
+Writes atomically and creates directories for you as needed. Sorts dependencies when writing. Preserves the indentation if the file already exists.
+
+@param path - The path to where the `package.json` file should be written or its directory.
+
+@example
+```
+import path from 'node:path';
+import {updatePackageSync} from 'write-pkg';
+
+updatePackageSync({foo: true});
+//=> { "foo": true }
+
+updatePackageSync({foo: false, bar: true});
+//=> { "foo": false, "bar": true }
+```
+*/
 export function updatePackageSync(path: string, data: JsonObject, options?: Options): void;
 export function updatePackageSync(data: JsonObject, options?: Options): void;
