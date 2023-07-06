@@ -25,7 +25,6 @@ export function normalize(packageJson) {
 }
 
 export function sanitize(filePath, data, options, {sanitizeData = true} = {}) {
-	// TODO: test w/ esmock
 	if (typeof filePath !== 'string') {
 		options = data;
 		data = filePath;

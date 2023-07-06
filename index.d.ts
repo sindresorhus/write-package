@@ -28,6 +28,8 @@ Write a `package.json` file.
 
 Writes atomically and creates directories for you as needed. Sorts dependencies when writing. Preserves the indentation if the file already exists.
 
+To write to a `package.json` file while preserving unchanged fields, see {@link updatePackage}.
+
 @param path - The path to where the `package.json` file should be written or its directory.
 
 @example
@@ -49,6 +51,8 @@ export function writePackage(data: PackageJsonData, options?: Options): Promise<
 Synchronously write a `package.json` file.
 
 Writes atomically and creates directories for you as needed. Sorts dependencies when writing. Preserves the indentation if the file already exists.
+
+To write to a `package.json` file while preserving unchanged fields, see {@link updatePackageSync}.
 
 @param path - The path to where the `package.json` file should be written or its directory.
 
@@ -119,16 +123,104 @@ type DependencyKeys =
 
 type Dependencies = Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>;
 
+/**
+Add dependencies to a `package.json` file.
+
+Sorts dependencies when writing. Preserves indentation, or creates the file if it does not exist.
+
+@param path - The path to where the `package.json` file should be written or its directory.
+
+@example
+```
+import path from 'node:path';
+import {writePackage, addPackageDependencies} from 'write-pkg';
+
+await writePackage({foo: true});
+//=> { "foo": true }
+
+await addPackageDependencies({foo: '1.0.0'});
+//=> { "foo": true, "dependencies": { "foo": "1.0.0" } }
+
+await addPackageDependencies({dependencies: {foo: '1.0.0'}, devDependencies: {bar: '1.0.0'}});
+//=> { "foo": true, "dependencies": { "foo": "1.0.0" }, "devDependencies": { "bar": "1.0.0" } }
+```
+*/
 export function addPackageDependencies(path: string, dependencies: Dependencies, options?: Options): Promise<void>;
 export function addPackageDependencies(dependencies: Dependencies, options?: Options): Promise<void>;
 
+/**
+Add dependencies to a `package.json` file.
+
+Sorts dependencies when writing. Preserves indentation, or creates the file if it does not exist.
+
+@param path - The path to where the `package.json` file should be written or its directory.
+
+@example
+```
+import path from 'node:path';
+import {writePackageSync, addPackageDependenciesSync} from 'write-pkg';
+
+writePackageSync({foo: true});
+//=> { "foo": true }
+
+addPackageDependenciesSync({foo: '1.0.0'});
+//=> { "foo": true, "dependencies": { "foo": "1.0.0" } }
+
+addPackageDependenciesSync({dependencies: {foo: '1.0.0'}, devDependencies: {bar: '1.0.0'}});
+//=> { "foo": true, "dependencies": { "foo": "1.0.0" }, "devDependencies": { "bar": "1.0.0" } }
+```
+*/
 export function addPackageDependenciesSync(path: string, dependencies: Dependencies, options?: Options): void;
 export function addPackageDependenciesSync(dependencies: Dependencies, options?: Options): void;
 
 type DependenciesToRemove = string[] | Partial<Record<DependencyKeys, string[]>>;
 
+/**
+Remove dependencies from a `package.json` file.
+
+Sorts dependencies when writing. Preserves indentation. Does not throw if the file does not exist.
+
+@param path - The path to where the `package.json` file should be written or its directory.
+
+@example
+```
+import path from 'node:path';
+import {writePackage, removePackageDependencies} from 'write-pkg';
+
+await writePackage({foo: true, dependencies: {foo: '1.0.0'}, devDependencies: {bar: '1.0.0'}});
+//=> { "foo": true, "dependencies": { "foo": "1.0.0" }, "devDependencies": { "bar": "1.0.0" } }
+
+await removePackageDependencies(['foo']);
+//=> { "foo": true, "devDependencies": { "bar": "1.0.0" } }
+
+await removePackageDependencies({devDependencies: ['bar']});
+//=> { "foo": true }
+```
+*/
 export function removePackageDependencies(path: string, dependencies: DependenciesToRemove, options?: Options): Promise<void>;
 export function removePackageDependencies(dependencies: DependenciesToRemove, options?: Options): Promise<void>;
 
+/**
+Remove dependencies from a `package.json` file.
+
+Sorts dependencies when writing. Preserves indentation. Does not throw if the file does not exist.
+
+@param path - The path to where the `package.json` file should be written or its directory.
+
+@example
+```
+import path from 'node:path';
+import {writePackageSync, removePackageDependenciesSync} from 'write-pkg';
+
+writePackageSync({foo: true, dependencies: {foo: '1.0.0'}, devDependencies: {bar: '1.0.0'}});
+//=> { "foo": true, "dependencies": { "foo": "1.0.0" }, "devDependencies": { "bar": "1.0.0" } }
+
+removePackageDependenciesSync(['foo']);
+//=> { "foo": true, "devDependencies": { "bar": "1.0.0" } }
+
+removePackageDependenciesSync({devDependencies: ['bar']});
+//=> { "foo": true }
+```
+*/
 export function removePackageDependenciesSync(path: string, dependencies: DependenciesToRemove, options?: Options): void;
 export function removePackageDependenciesSync(dependencies: DependenciesToRemove, options?: Options): void;

@@ -40,7 +40,6 @@
 	},
 	"devDependencies": {
 		"ava": "^5.3.1",
-		"esmock": "^2.3.1",
 		"filter-anything": "^3.0.7",
 		"tempy": "^3.0.0",
 		"tsd": "^0.28.1",

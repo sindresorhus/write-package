@@ -27,7 +27,7 @@ console.log('done');
 
 ### writePackage(path?, data, options?)
 
-Returns a `Promise`.
+Returns a `Promise` that resolves when the `package.json` file has been written.
 
 ### writePackageSync(path?, data, options?)
 
@@ -38,9 +38,94 @@ Default: `process.cwd()`
 
 The path to where the `package.json` file should be written or its directory.
 
+#### data
+
+Type `object`
+
+JSON data to write to the `package.json` file.
+
 #### options
 
 Type: `object`
+
+See [Options](#options-4).
+
+### updatePackage(path?, data, options?)
+
+Returns a `Promise` that resolves when the `package.json` file has been updated.
+
+### updatePackageSync(path?, data, options?)
+
+#### path
+
+Type: `string`\
+Default: `process.cwd()`
+
+The path to where the `package.json` file should be written or its directory.
+
+#### data
+
+Type `object`
+
+JSON data to write to the `package.json` file. If the file already exists, existing fields will be merged with the values in `data`.
+
+#### options
+
+Type: `object`
+
+See [Options](#options-4).
+
+### addPackageDependencies(path?, dependencies, options?)
+
+Returns a `Promise` that resolves when the `package.json` file has been written.
+
+### addPackageDependenciesSync(path?, dependencies, options?)
+
+#### path
+
+Type: `string`\
+Default: `process.cwd()`
+
+The path to where the `package.json` file should be written or its directory.
+
+#### dependencies
+
+Type `Record<string, string> | Partial<Record<'dependencies' | 'devDependencies' | 'optionalDependencies' | 'peerDependencies', Record<string, string>>>`
+
+Dependencies to add to the `package.json` file.
+
+#### options
+
+Type: `object`
+
+See [Options](#options-4).
+
+### removePackageDependencies(path?, dependencies, options?)
+
+Returns a `Promise` that resolves when the `package.json` file has been written. Does not throw if the file does not exist.
+
+### removePackageDependenciesSync(path?, dependencies, options?)
+
+#### path
+
+Type: `string`\
+Default: `process.cwd()`
+
+The path to where the `package.json` file should be written or its directory.
+
+#### dependencies
+
+Type `string[] | Partial<Record<'dependencies' | 'devDependencies' | 'optionalDependencies' | 'peerDependencies', string[]>>`
+
+Dependencies to remove from the `package.json` file.
+
+#### options
+
+Type: `object`
+
+See [Options](#options-4).
+
+### Options
 
 ##### indent
 
