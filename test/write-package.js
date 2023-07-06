@@ -73,7 +73,7 @@ test('async - removes empty dependency properties by default', async t => {
 	t.falsy(packageJson.peerDependencies);
 });
 
-test('async - removes empty dependency properties sync by default', t => {
+test('sync - removes empty dependency properties by default', t => {
 	const temporary = temporaryDirectory();
 	writePackageSync(temporary, emptyPropFixture);
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
