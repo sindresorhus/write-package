@@ -1,6 +1,4 @@
-import type {JsonObject, PackageJson} from 'type-fest';
-
-// TODO: make `data` be PackageJson | JsonObject
+import type {PackageJson, JsonObject} from 'type-fest';
 
 export type Options = {
 	/**
@@ -22,6 +20,9 @@ export type Options = {
 	readonly normalize?: boolean;
 };
 
+/** A JSON object with suggested fields for [npm's `package.json` file](https://docs.npmjs.com/creating-a-package-json-file). */
+type PackageJsonData = PackageJson | JsonObject; // eslint-disable-line @typescript-eslint/no-redundant-type-constituents
+
 /**
 Write a `package.json` file.
 
@@ -41,8 +42,8 @@ await writePackage(path.join('unicorn', 'package.json'), {foo: true});
 console.log('done');
 ```
 */
-export function writePackage(path: string, data: JsonObject, options?: Options): Promise<void>;
-export function writePackage(data: JsonObject, options?: Options): Promise<void>;
+export function writePackage(path: string, data: PackageJsonData, options?: Options): Promise<void>;
+export function writePackage(data: PackageJsonData, options?: Options): Promise<void>;
 
 /**
 Synchronously write a `package.json` file.
@@ -63,8 +64,8 @@ writePackageSync(path.join('unicorn', 'package.json'), {foo: true});
 console.log('done');
 ```
 */
-export function writePackageSync(path: string, data: JsonObject, options?: Options): void;
-export function writePackageSync(data: JsonObject, options?: Options): void;
+export function writePackageSync(path: string, data: PackageJsonData, options?: Options): void;
+export function writePackageSync(data: PackageJsonData, options?: Options): void;
 
 /**
 Update a `package.json` file.
@@ -85,8 +86,8 @@ await updatePackage({foo: false, bar: true});
 //=> { "foo": false, "bar": true }
 ```
 */
-export function updatePackage(path: string, data: JsonObject, options?: Options): Promise<void>;
-export function updatePackage(data: JsonObject, options?: Options): Promise<void>;
+export function updatePackage(path: string, data: PackageJsonData, options?: Options): Promise<void>;
+export function updatePackage(data: PackageJsonData, options?: Options): Promise<void>;
 
 /**
 Update a `package.json` file.
@@ -107,8 +108,8 @@ updatePackageSync({foo: false, bar: true});
 //=> { "foo": false, "bar": true }
 ```
 */
-export function updatePackageSync(path: string, data: JsonObject, options?: Options): void;
-export function updatePackageSync(data: JsonObject, options?: Options): void;
+export function updatePackageSync(path: string, data: PackageJsonData, options?: Options): void;
+export function updatePackageSync(data: PackageJsonData, options?: Options): void;
 
 type DependencyKeys =
 	| 'dependencies'
@@ -116,8 +117,10 @@ type DependencyKeys =
 	| 'optionalDependencies'
 	| 'peerDependencies';
 
-export function addPackageDependencies(path: string, dependencies: Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>, options?: Options): Promise<void>;
-export function addPackageDependencies(dependencies: Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>, options?: Options): Promise<void>;
+type Dependencies = Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>;
 
-export function addPackageDependenciesSync(path: string, dependencies: Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>, options?: Options): void;
-export function addPackageDependenciesSync(dependencies: Partial<Record<string, string>> | Pick<PackageJson, DependencyKeys>, options?: Options): void;
+export function addPackageDependencies(path: string, dependencies: Dependencies, options?: Options): Promise<void>;
+export function addPackageDependencies(dependencies: Dependencies, options?: Options): Promise<void>;
+
+export function addPackageDependenciesSync(path: string, dependencies: Dependencies, options?: Options): void;
+export function addPackageDependenciesSync(dependencies: Dependencies, options?: Options): void;
