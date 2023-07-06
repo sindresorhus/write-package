@@ -80,7 +80,6 @@ Writes atomically and creates directories for you as needed. Sorts dependencies 
 
 @example
 ```
-import path from 'node:path';
 import {updatePackage} from 'write-pkg';
 
 await updatePackage({foo: true});
@@ -102,7 +101,6 @@ Writes atomically and creates directories for you as needed. Sorts dependencies 
 
 @example
 ```
-import path from 'node:path';
 import {updatePackageSync} from 'write-pkg';
 
 updatePackageSync({foo: true});
@@ -132,7 +130,6 @@ Sorts dependencies when writing. Preserves indentation, or creates the file if i
 
 @example
 ```
-import path from 'node:path';
 import {writePackage, addPackageDependencies} from 'write-pkg';
 
 await writePackage({foo: true});
@@ -157,7 +154,6 @@ Sorts dependencies when writing. Preserves indentation, or creates the file if i
 
 @example
 ```
-import path from 'node:path';
 import {writePackageSync, addPackageDependenciesSync} from 'write-pkg';
 
 writePackageSync({foo: true});
@@ -184,7 +180,6 @@ Sorts dependencies when writing. Preserves indentation. Does not throw if the fi
 
 @example
 ```
-import path from 'node:path';
 import {writePackage, removePackageDependencies} from 'write-pkg';
 
 await writePackage({foo: true, dependencies: {foo: '1.0.0'}, devDependencies: {bar: '1.0.0'}});
@@ -209,7 +204,6 @@ Sorts dependencies when writing. Preserves indentation. Does not throw if the fi
 
 @example
 ```
-import path from 'node:path';
 import {writePackageSync, removePackageDependenciesSync} from 'write-pkg';
 
 writePackageSync({foo: true, dependencies: {foo: '1.0.0'}, devDependencies: {bar: '1.0.0'}});
