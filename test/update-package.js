@@ -21,7 +21,7 @@ test('async', async t => {
 
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
 
-	t.like(packageJson, {
+	t.deepEqual(packageJson, {
 		name: 'foo',
 		version: '2.0.0',
 		license: 'MIT',
@@ -34,7 +34,7 @@ test('async - create package.json if one does not exist', async t => {
 	await updatePackage(temporary, {name: 'foo', version: '1.0.0'});
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
 
-	t.like(packageJson, {
+	t.deepEqual(packageJson, {
 		name: 'foo',
 		version: '1.0.0',
 	});
@@ -63,7 +63,7 @@ test('async - merge dependencies', async t => {
 
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
 
-	t.like(packageJson, {
+	t.deepEqual(packageJson, {
 		name: 'foo',
 		dependencies: {
 			foo: '2.0.0',
@@ -95,7 +95,7 @@ test('async - allow not removing empty dependency properties', async t => {
 	await updatePackage(temporary, emptyPropFixture, {normalize: false});
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
 
-	t.like(packageJson, emptyPropFixture);
+	t.deepEqual(packageJson, emptyPropFixture);
 });
 
 test('async - detect tab indent', async t => {
@@ -106,7 +106,7 @@ test('async - detect tab indent', async t => {
 	await updatePackage(temporary, {foo: false, foobar: true});
 
 	const packageJson = await readPackage({cwd: temporaryDir, normalize: false});
-	t.like(packageJson, {foo: false, bar: true, foobar: true});
+	t.deepEqual(packageJson, {foo: false, bar: true, foobar: true});
 });
 
 test('async - detect 2 spaces indent', async t => {
@@ -117,7 +117,7 @@ test('async - detect 2 spaces indent', async t => {
 	await updatePackage(temporary, {foo: false, foobar: true});
 
 	const packageJson = await readPackage({cwd: temporaryDir, normalize: false});
-	t.like(packageJson, {foo: false, bar: true, foobar: true});
+	t.deepEqual(packageJson, {foo: false, bar: true, foobar: true});
 });
 
 test('sync', t => {
@@ -128,7 +128,7 @@ test('sync', t => {
 
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
 
-	t.like(packageJson, {
+	t.deepEqual(packageJson, {
 		name: 'foo',
 		version: '2.0.0',
 		license: 'MIT',
@@ -141,7 +141,7 @@ test('sync - create package.json if one does not exist', t => {
 	updatePackageSync(temporary, {name: 'foo', version: '1.0.0'});
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
 
-	t.like(packageJson, {
+	t.deepEqual(packageJson, {
 		name: 'foo',
 		version: '1.0.0',
 	});
@@ -170,7 +170,7 @@ test('sync - merge dependencies', t => {
 
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
 
-	t.like(packageJson, {
+	t.deepEqual(packageJson, {
 		name: 'foo',
 		dependencies: {
 			foo: '2.0.0',
@@ -202,7 +202,7 @@ test('sync - allow not removing empty dependency properties', t => {
 	updatePackageSync(temporary, emptyPropFixture, {normalize: false});
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
 
-	t.like(packageJson, emptyPropFixture);
+	t.deepEqual(packageJson, emptyPropFixture);
 });
 
 test('sync - detect tab indent', t => {
@@ -213,7 +213,7 @@ test('sync - detect tab indent', t => {
 	updatePackageSync(temporary, {foo: false, foobar: true});
 
 	const packageJson = readPackageSync({cwd: temporaryDir, normalize: false});
-	t.like(packageJson, {foo: false, bar: true, foobar: true});
+	t.deepEqual(packageJson, {foo: false, bar: true, foobar: true});
 });
 
 test('sync - detect 2 spaces indent', t => {
@@ -224,5 +224,5 @@ test('sync - detect 2 spaces indent', t => {
 	updatePackageSync(temporary, {foo: false, foobar: true});
 
 	const packageJson = readPackageSync({cwd: temporaryDir, normalize: false});
-	t.like(packageJson, {foo: false, bar: true, foobar: true});
+	t.deepEqual(packageJson, {foo: false, bar: true, foobar: true});
 });
