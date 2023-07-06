@@ -13,6 +13,8 @@ const emptyPropFixture = {
 	peerDependencies: {},
 };
 
+const missingEndingBraceFixture = '{"name": "foo", "dependencies": {"bar": "1.0.0"}';
+
 test('async', async t => {
 	const temporary = temporaryDirectory();
 
@@ -122,6 +124,16 @@ test('async - detect 2 spaces indent', async t => {
 	);
 });
 
+test('async - invalid package.json should throw', async t => {
+	const temporary = path.join(temporaryDirectory(), 'package.json');
+	await fsPromises.writeFile(temporary, missingEndingBraceFixture);
+
+	await t.throwsAsync(
+		updatePackage(temporary, {version: '1.0.0'}),
+		{name: 'JSONError'},
+	);
+});
+
 test('sync', t => {
 	const temporary = temporaryDirectory();
 
@@ -228,5 +240,15 @@ test('sync - detect 2 spaces indent', t => {
 	t.is(
 		fs.readFileSync(temporary, 'utf8'),
 		'{\n  "foo": false,\n  "bar": true,\n  "foobar": true\n}\n',
+	);
+});
+
+test('sync - invalid package.json should throw', t => {
+	const temporary = path.join(temporaryDirectory(), 'package.json');
+	fs.writeFileSync(temporary, missingEndingBraceFixture);
+
+	t.throws(
+		() => updatePackageSync(temporary, {version: '1.0.0'}),
+		{name: 'JSONError'},
 	);
 });
