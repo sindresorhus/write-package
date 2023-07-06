@@ -124,3 +124,11 @@ export function addPackageDependencies(dependencies: Dependencies, options?: Opt
 
 export function addPackageDependenciesSync(path: string, dependencies: Dependencies, options?: Options): void;
 export function addPackageDependenciesSync(dependencies: Dependencies, options?: Options): void;
+
+type DependenciesToRemove = string[] | Partial<Record<DependencyKeys, string[]>>;
+
+export function removePackageDependencies(path: string, dependencies: DependenciesToRemove, options?: Options): Promise<void>;
+export function removePackageDependencies(dependencies: DependenciesToRemove, options?: Options): Promise<void>;
+
+export function removePackageDependenciesSync(path: string, dependencies: DependenciesToRemove, options?: Options): void;
+export function removePackageDependenciesSync(dependencies: DependenciesToRemove, options?: Options): void;

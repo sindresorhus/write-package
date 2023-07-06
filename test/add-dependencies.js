@@ -1,9 +1,9 @@
-import fs, {promises as fsPromises} from 'node:fs';
 import path from 'node:path';
+import fs, {promises as fsPromises} from 'node:fs';
 import test from 'ava';
+import {pick} from 'filter-anything';
 import {temporaryDirectory} from 'tempy';
 import {readPackage, readPackageSync} from 'read-pkg';
-import {pick} from 'object-pickby';
 import {writePackage, writePackageSync, addPackageDependencies, addPackageDependenciesSync} from '../index.js';
 
 const fixture = {
