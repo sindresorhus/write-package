@@ -1,8 +1,8 @@
 import path from 'node:path';
+import fs, {promises as fsPromises} from 'node:fs';
 import test from 'ava';
 import {temporaryDirectory} from 'tempy';
 import {readPackage, readPackageSync} from 'read-pkg';
-import {writeJsonFile, writeJsonFileSync} from 'write-json-file';
 import {writePackage, writePackageSync, updatePackage, updatePackageSync} from '../index.js';
 
 const emptyPropFixture = {
@@ -100,24 +100,26 @@ test('async - allow not removing empty dependency properties', async t => {
 
 test('async - detect tab indent', async t => {
 	const temporary = path.join(temporaryDirectory(), 'package.json');
-	const temporaryDir = path.dirname(temporary);
 
-	await writeJsonFile(temporary, {foo: true, bar: true}, {indent: '\t'});
+	await writePackage(temporary, {foo: true, bar: true}, {indent: '\t'});
 	await updatePackage(temporary, {foo: false, foobar: true});
 
-	const packageJson = await readPackage({cwd: temporaryDir, normalize: false});
-	t.deepEqual(packageJson, {foo: false, bar: true, foobar: true});
+	t.is(
+		await fsPromises.readFile(temporary, 'utf8'),
+		'{\n\t"foo": false,\n\t"bar": true,\n\t"foobar": true\n}\n',
+	);
 });
 
 test('async - detect 2 spaces indent', async t => {
 	const temporary = path.join(temporaryDirectory(), 'package.json');
-	const temporaryDir = path.dirname(temporary);
 
-	await writeJsonFile(temporary, {foo: true, bar: true}, {indent: 2});
+	await writePackage(temporary, {foo: true, bar: true}, {indent: 2});
 	await updatePackage(temporary, {foo: false, foobar: true});
 
-	const packageJson = await readPackage({cwd: temporaryDir, normalize: false});
-	t.deepEqual(packageJson, {foo: false, bar: true, foobar: true});
+	t.is(
+		await fsPromises.readFile(temporary, 'utf8'),
+		'{\n  "foo": false,\n  "bar": true,\n  "foobar": true\n}\n',
+	);
 });
 
 test('sync', t => {
@@ -207,22 +209,24 @@ test('sync - allow not removing empty dependency properties', t => {
 
 test('sync - detect tab indent', t => {
 	const temporary = path.join(temporaryDirectory(), 'package.json');
-	const temporaryDir = path.dirname(temporary);
 
-	writeJsonFileSync(temporary, {foo: true, bar: true}, {indent: '\t'});
+	writePackageSync(temporary, {foo: true, bar: true}, {indent: '\t'});
 	updatePackageSync(temporary, {foo: false, foobar: true});
 
-	const packageJson = readPackageSync({cwd: temporaryDir, normalize: false});
-	t.deepEqual(packageJson, {foo: false, bar: true, foobar: true});
+	t.is(
+		fs.readFileSync(temporary, 'utf8'),
+		'{\n\t"foo": false,\n\t"bar": true,\n\t"foobar": true\n}\n',
+	);
 });
 
 test('sync - detect 2 spaces indent', t => {
 	const temporary = path.join(temporaryDirectory(), 'package.json');
-	const temporaryDir = path.dirname(temporary);
 
-	writeJsonFileSync(temporary, {foo: true, bar: true}, {indent: 2});
+	writePackageSync(temporary, {foo: true, bar: true}, {indent: 2});
 	updatePackageSync(temporary, {foo: false, foobar: true});
 
-	const packageJson = readPackageSync({cwd: temporaryDir, normalize: false});
-	t.deepEqual(packageJson, {foo: false, bar: true, foobar: true});
+	t.is(
+		fs.readFileSync(temporary, 'utf8'),
+		'{\n  "foo": false,\n  "bar": true,\n  "foobar": true\n}\n',
+	);
 });
