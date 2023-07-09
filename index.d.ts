@@ -20,7 +20,9 @@ export type Options = {
 	readonly normalize?: boolean;
 };
 
-/** A JSON object with suggested fields for [npm's `package.json` file](https://docs.npmjs.com/creating-a-package-json-file). */
+/**
+A JSON object with suggested fields for [npm's `package.json` file](https://docs.npmjs.com/creating-a-package-json-file).
+*/
 type PackageJsonData = PackageJson | JsonObject; // eslint-disable-line @typescript-eslint/no-redundant-type-constituents
 
 /**
