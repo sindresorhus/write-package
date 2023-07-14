@@ -20,7 +20,8 @@
 	},
 	"files": [
 		"index.js",
-		"index.d.ts"
+		"index.d.ts",
+		"source"
 	],
 	"keywords": [
 		"json",
@@ -35,13 +36,13 @@
 		"deepmerge-ts": "^5.1.0",
 		"read-pkg": "^8.0.0",
 		"sort-keys": "^5.0.0",
-		"type-fest": "^3.12.0",
+		"type-fest": "^3.13.0",
 		"write-json-file": "^5.0.0"
 	},
 	"devDependencies": {
 		"ava": "^5.3.1",
 		"filter-anything": "^3.0.7",
-		"tempy": "^3.0.0",
+		"tempy": "^3.1.0",
 		"tsd": "^0.28.1",
 		"xo": "^0.54.2"
 	}
