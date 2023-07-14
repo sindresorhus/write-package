@@ -1,10 +1,10 @@
-import fs from 'node:fs';
+import fs, {promises as fsPromises} from 'node:fs';
 import path from 'node:path';
 import test from 'ava';
-import tempfile from 'tempfile';
+import {temporaryDirectory} from 'tempy';
 import {readPackage, readPackageSync} from 'read-pkg';
 import {writeJsonFile} from 'write-json-file';
-import {writePackage, writePackageSync} from './index.js';
+import {writePackage, writePackageSync} from '../index.js';
 
 const fixture = {
 	foo: true,
@@ -31,7 +31,7 @@ const fixture = {
 };
 
 test('async', async t => {
-	const temporary = tempfile();
+	const temporary = temporaryDirectory();
 	await writePackage(temporary, fixture);
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
 	t.true(packageJson.foo);
@@ -43,7 +43,7 @@ test('async', async t => {
 });
 
 test('sync', t => {
-	const temporary = tempfile();
+	const temporary = temporaryDirectory();
 	writePackageSync(temporary, fixture);
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
 	t.true(packageJson.foo);
@@ -62,8 +62,8 @@ const emptyPropFixture = {
 	peerDependencies: {},
 };
 
-test('removes empty dependency properties by default', async t => {
-	const temporary = tempfile();
+test('async - removes empty dependency properties by default', async t => {
+	const temporary = temporaryDirectory();
 	await writePackage(temporary, emptyPropFixture);
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
 	t.true(packageJson.foo);
@@ -73,8 +73,8 @@ test('removes empty dependency properties by default', async t => {
 	t.falsy(packageJson.peerDependencies);
 });
 
-test('removes empty dependency properties sync by default', t => {
-	const temporary = tempfile();
+test('sync - removes empty dependency properties by default', t => {
+	const temporary = temporaryDirectory();
 	writePackageSync(temporary, emptyPropFixture);
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
 	t.true(packageJson.foo);
@@ -84,8 +84,8 @@ test('removes empty dependency properties sync by default', t => {
 	t.falsy(packageJson.peerDependencies);
 });
 
-test('allow not removing empty dependency properties', async t => {
-	const temporary = tempfile();
+test('async - allow not removing empty dependency properties', async t => {
+	const temporary = temporaryDirectory();
 	await writePackage(temporary, emptyPropFixture, {normalize: false});
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
 	t.true(packageJson.foo);
@@ -95,8 +95,8 @@ test('allow not removing empty dependency properties', async t => {
 	t.truthy(packageJson.peerDependencies);
 });
 
-test('allow not removing empty dependency properties sync', t => {
-	const temporary = tempfile();
+test('sync - allow not removing empty dependency properties', t => {
+	const temporary = temporaryDirectory();
 	writePackageSync(temporary, emptyPropFixture, {normalize: false});
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
 	t.true(packageJson.foo);
@@ -106,38 +106,38 @@ test('allow not removing empty dependency properties sync', t => {
 	t.truthy(packageJson.peerDependencies);
 });
 
-test('detect tab indent', async t => {
-	const temporary = path.join(tempfile(), 'package.json');
+test('async - detect tab indent', async t => {
+	const temporary = path.join(temporaryDirectory(), 'package.json');
 	await writeJsonFile(temporary, {foo: true}, {indent: '\t'});
 	await writePackage(temporary, {foo: true, bar: true, foobar: true});
 	t.is(
-		fs.readFileSync(temporary, 'utf8'),
+		await fsPromises.readFile(temporary, 'utf8'),
 		'{\n\t"foo": true,\n\t"bar": true,\n\t"foobar": true\n}\n',
 	);
 });
 
-test('detect tab indent sync', async t => {
-	const temporary = path.join(tempfile(), 'package.json');
+test('sync - detect tab indent', async t => {
+	const temporary = path.join(temporaryDirectory(), 'package.json');
 	await writeJsonFile(temporary, {foo: true}, {indent: '\t'});
 	writePackageSync(temporary, {foo: true, bar: true, foobar: true});
 	t.is(
-		fs.readFileSync(temporary, 'utf8'),
+		await fsPromises.readFile(temporary, 'utf8'),
 		'{\n\t"foo": true,\n\t"bar": true,\n\t"foobar": true\n}\n',
 	);
 });
 
-test('detect 2 spaces indent', async t => {
-	const temporary = path.join(tempfile(), 'package.json');
+test('async - detect 2 spaces indent', async t => {
+	const temporary = path.join(temporaryDirectory(), 'package.json');
 	await writeJsonFile(temporary, {foo: true}, {indent: 2});
 	await writePackage(temporary, {foo: true, bar: true, foobar: true});
 	t.is(
-		fs.readFileSync(temporary, 'utf8'),
+		await fsPromises.readFile(temporary, 'utf8'),
 		'{\n  "foo": true,\n  "bar": true,\n  "foobar": true\n}\n',
 	);
 });
 
-test('detect 2 spaces indent sync', async t => {
-	const temporary = path.join(tempfile(), 'package.json');
+test('sync - detect 2 spaces indent', async t => {
+	const temporary = path.join(temporaryDirectory(), 'package.json');
 	await writeJsonFile(temporary, {foo: true}, {indent: 2});
 	writePackageSync(temporary, {foo: true, bar: true, foobar: true});
 	t.is(
