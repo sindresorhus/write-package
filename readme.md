@@ -56,6 +56,16 @@ Returns a `Promise` that resolves when the `package.json` file has been updated.
 
 ### updatePackageSync(path?, data, options?)
 
+```js
+import {updatePackage} from 'write-pkg';
+
+await updatePackage({foo: true});
+//=> { "foo": true }
+
+await updatePackage({foo: false, bar: true});
+//=> { "foo": false, "bar": true }
+```
+
 #### path
 
 Type: `string`\
@@ -81,6 +91,19 @@ Returns a `Promise` that resolves when the `package.json` file has been written.
 
 ### addPackageDependenciesSync(path?, dependencies, options?)
 
+```js
+import {writePackage, addPackageDependencies} from 'write-pkg';
+
+await writePackage({foo: true});
+//=> { "foo": true }
+
+await addPackageDependencies({foo: '1.0.0'});
+//=> { "foo": true, "dependencies": { "foo": "1.0.0" } }
+
+await addPackageDependencies({dependencies: {foo: '1.0.0'}, devDependencies: {bar: '1.0.0'}});
+//=> { "foo": true, "dependencies": { "foo": "1.0.0" }, "devDependencies": { "bar": "1.0.0" } }
+```
+
 #### path
 
 Type: `string`\
@@ -90,7 +113,7 @@ The path to where the `package.json` file should be written or its directory.
 
 #### dependencies
 
-Type `Record<string, string> | Partial<Record<'dependencies' | 'devDependencies' | 'optionalDependencies' | 'peerDependencies', Record<string, string>>>`
+Type: `Record<string, string> | Partial<Record<'dependencies' | 'devDependencies' | 'optionalDependencies' | 'peerDependencies', Record<string, string>>>`
 
 Dependencies to add to the `package.json` file.
 
@@ -105,6 +128,19 @@ See [Options](#options-4).
 Returns a `Promise` that resolves when the `package.json` file has been written. Does not throw if the file does not exist.
 
 ### removePackageDependenciesSync(path?, dependencies, options?)
+
+```js
+import {writePackage, removePackageDependencies} from 'write-pkg';
+
+await writePackage({foo: true, dependencies: {foo: '1.0.0'}, devDependencies: {bar: '1.0.0'}});
+//=> { "foo": true, "dependencies": { "foo": "1.0.0" }, "devDependencies": { "bar": "1.0.0" } }
+
+await removePackageDependencies(['foo']);
+//=> { "foo": true, "devDependencies": { "bar": "1.0.0" } }
+
+await removePackageDependencies({devDependencies: ['bar']});
+//=> { "foo": true }
+```
 
 #### path
 
