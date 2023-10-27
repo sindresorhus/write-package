@@ -41,9 +41,16 @@
 	},
 	"devDependencies": {
 		"ava": "^5.3.1",
+		"esmock": "^2.5.8",
 		"filter-anything": "^3.0.7",
 		"tempy": "^3.1.0",
 		"tsd": "^0.29.0",
 		"xo": "^0.56.0"
+	},
+	"ava": {
+		"nodeArguments": [
+			"--loader=esmock",
+			"--no-warnings=ExperimentalWarning"
+		]
 	}
 }

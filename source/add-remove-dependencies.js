@@ -5,13 +5,13 @@ import {updatePackage, updatePackageSync} from './update-package.js';
 import {sanitize, normalize, hasMultipleDependencyTypes} from './util.js';
 
 export async function addPackageDependencies(filePath, dependencies, options) {
-	return hasMultipleDependencyTypes(dependencies)
+	return hasMultipleDependencyTypes(typeof filePath === 'string' ? dependencies : filePath)
 		? updatePackage(filePath, {...dependencies}, options)
 		: updatePackage(filePath, {dependencies}, options);
 }
 
 export function addPackageDependenciesSync(filePath, dependencies, options) {
-	return hasMultipleDependencyTypes(dependencies)
+	return hasMultipleDependencyTypes(typeof filePath === 'string' ? dependencies : filePath)
 		? updatePackageSync(filePath, {...dependencies}, options)
 		: updatePackageSync(filePath, {dependencies}, options);
 }
