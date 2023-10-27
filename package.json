@@ -13,7 +13,7 @@
 	"type": "module",
 	"exports": "./index.js",
 	"engines": {
-		"node": ">=16"
+		"node": ">=18"
 	},
 	"scripts": {
 		"test": "xo && ava && tsd"
@@ -34,16 +34,16 @@
 	],
 	"dependencies": {
 		"deepmerge-ts": "^5.1.0",
-		"read-pkg": "^8.0.0",
+		"read-pkg": "^8.1.0",
 		"sort-keys": "^5.0.0",
-		"type-fest": "^3.13.0",
+		"type-fest": "^4.6.0",
 		"write-json-file": "^5.0.0"
 	},
 	"devDependencies": {
 		"ava": "^5.3.1",
 		"filter-anything": "^3.0.7",
 		"tempy": "^3.1.0",
-		"tsd": "^0.28.1",
-		"xo": "^0.54.2"
+		"tsd": "^0.29.0",
+		"xo": "^0.56.0"
 	}
 }
