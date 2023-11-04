@@ -23,7 +23,7 @@ export type Options = {
 /**
 A JSON object with suggested fields for [npm's `package.json` file](https://docs.npmjs.com/creating-a-package-json-file).
 */
-type PackageJsonData = PackageJson | JsonObject; // eslint-disable-line @typescript-eslint/no-redundant-type-constituents
+type PackageJsonData = PackageJson | JsonObject;
 
 /**
 Write a `package.json` file.
