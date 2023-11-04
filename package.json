@@ -1,9 +1,9 @@
 {
-	"name": "write-pkg",
+	"name": "write-package",
 	"version": "6.0.1",
 	"description": "Write a package.json file",
 	"license": "MIT",
-	"repository": "sindresorhus/write-pkg",
+	"repository": "sindresorhus/write-package",
 	"funding": "https://github.com/sponsors/sindresorhus",
 	"author": {
 		"name": "Sindre Sorhus",

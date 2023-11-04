@@ -37,7 +37,7 @@ To write to a `package.json` file while preserving unchanged fields, see {@link 
 @example
 ```
 import path from 'node:path';
-import {writePackage} from 'write-pkg';
+import {writePackage} from 'write-package';
 
 await writePackage({foo: true});
 console.log('done');
@@ -61,7 +61,7 @@ To write to a `package.json` file while preserving unchanged fields, see {@link 
 @example
 ```
 import path from 'node:path';
-import {writePackageSync} from 'write-pkg';
+import {writePackageSync} from 'write-package';
 
 writePackageSync({foo: true});
 console.log('done');
@@ -82,7 +82,7 @@ Writes atomically and creates directories for you as needed. Sorts dependencies 
 
 @example
 ```
-import {updatePackage} from 'write-pkg';
+import {updatePackage} from 'write-package';
 
 await updatePackage({foo: true});
 //=> { "foo": true }
@@ -103,7 +103,7 @@ Writes atomically and creates directories for you as needed. Sorts dependencies 
 
 @example
 ```
-import {updatePackageSync} from 'write-pkg';
+import {updatePackageSync} from 'write-package';
 
 updatePackageSync({foo: true});
 //=> { "foo": true }
@@ -132,7 +132,7 @@ Sorts dependencies when writing. Preserves indentation, or creates the file if i
 
 @example
 ```
-import {writePackage, addPackageDependencies} from 'write-pkg';
+import {writePackage, addPackageDependencies} from 'write-package';
 
 await writePackage({foo: true});
 //=> { "foo": true }
@@ -156,7 +156,7 @@ Sorts dependencies when writing. Preserves indentation, or creates the file if i
 
 @example
 ```
-import {writePackageSync, addPackageDependenciesSync} from 'write-pkg';
+import {writePackageSync, addPackageDependenciesSync} from 'write-package';
 
 writePackageSync({foo: true});
 //=> { "foo": true }
@@ -182,7 +182,7 @@ Sorts dependencies when writing. Preserves indentation. Does not throw if the fi
 
 @example
 ```
-import {writePackage, removePackageDependencies} from 'write-pkg';
+import {writePackage, removePackageDependencies} from 'write-package';
 
 await writePackage({foo: true, dependencies: {foo: '1.0.0'}, devDependencies: {bar: '1.0.0'}});
 //=> { "foo": true, "dependencies": { "foo": "1.0.0" }, "devDependencies": { "bar": "1.0.0" } }
@@ -206,7 +206,7 @@ Sorts dependencies when writing. Preserves indentation. Does not throw if the fi
 
 @example
 ```
-import {writePackageSync, removePackageDependenciesSync} from 'write-pkg';
+import {writePackageSync, removePackageDependenciesSync} from 'write-package';
 
 writePackageSync({foo: true, dependencies: {foo: '1.0.0'}, devDependencies: {bar: '1.0.0'}});
 //=> { "foo": true, "dependencies": { "foo": "1.0.0" }, "devDependencies": { "bar": "1.0.0" } }

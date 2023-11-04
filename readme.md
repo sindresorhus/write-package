@@ -1,4 +1,4 @@
-# write-pkg
+# write-package
 
 > Write a `package.json` file
 
@@ -7,14 +7,14 @@ Writes atomically and creates directories for you as needed. Sorts dependencies 
 ## Install
 
 ```sh
-npm install write-pkg
+npm install write-package
 ```
 
 ## Usage
 
 ```js
 import path from 'node:path';
-import {writePackage} from 'write-pkg';
+import {writePackage} from 'write-package';
 
 await writePackage({foo: true});
 console.log('done');
@@ -57,7 +57,7 @@ Returns a `Promise` that resolves when the `package.json` file has been updated.
 ### updatePackageSync(path?, data, options?)
 
 ```js
-import {updatePackage} from 'write-pkg';
+import {updatePackage} from 'write-package';
 
 await updatePackage({foo: true});
 //=> { "foo": true }
@@ -92,7 +92,7 @@ Returns a `Promise` that resolves when the `package.json` file has been written.
 ### addPackageDependenciesSync(path?, dependencies, options?)
 
 ```js
-import {writePackage, addPackageDependencies} from 'write-pkg';
+import {writePackage, addPackageDependencies} from 'write-package';
 
 await writePackage({foo: true});
 //=> { "foo": true }
@@ -130,7 +130,7 @@ Returns a `Promise` that resolves when the `package.json` file has been written.
 ### removePackageDependenciesSync(path?, dependencies, options?)
 
 ```js
-import {writePackage, removePackageDependencies} from 'write-pkg';
+import {writePackage, removePackageDependencies} from 'write-package';
 
 await writePackage({foo: true, dependencies: {foo: '1.0.0'}, devDependencies: {bar: '1.0.0'}});
 //=> { "foo": true, "dependencies": { "foo": "1.0.0" }, "devDependencies": { "bar": "1.0.0" } }
