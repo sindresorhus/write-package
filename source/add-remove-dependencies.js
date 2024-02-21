@@ -37,8 +37,10 @@ export async function removePackageDependencies(filePath, dependencies, options)
 			delete pkg.dependencies[dependency];
 		}
 	} else {
-		for (const [dependencyKey, dependency] of Object.entries(dependencies)) {
-			delete pkg[dependencyKey][dependency];
+		for (const [dependencyKey, _dependencies] of Object.entries(dependencies)) {
+			for (const dependency of _dependencies) {
+				delete pkg[dependencyKey][dependency];
+			}
 		}
 	}
 
@@ -70,8 +72,10 @@ export function removePackageDependenciesSync(filePath, dependencies, options) {
 			delete pkg.dependencies[dependency];
 		}
 	} else {
-		for (const [dependencyKey, dependency] of Object.entries(dependencies)) {
-			delete pkg[dependencyKey][dependency];
+		for (const [dependencyKey, _dependencies] of Object.entries(dependencies)) {
+			for (const dependency of _dependencies) {
+				delete pkg[dependencyKey][dependency];
+			}
 		}
 	}
 
