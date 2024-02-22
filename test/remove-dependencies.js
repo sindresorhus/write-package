@@ -1,7 +1,7 @@
 import path from 'node:path';
 import fs, {promises as fsPromises} from 'node:fs';
 import test from 'ava';
-import {omit} from 'filter-anything';
+import {omit, pick} from 'filter-anything';
 import {temporaryDirectory} from 'tempy';
 import {readPackage, readPackageSync} from 'read-pkg';
 import {removePackageDependencies, removePackageDependenciesSync, writePackage, writePackageSync} from '../index.js';
@@ -43,10 +43,10 @@ test('async - multiple types', async t => {
 
 	t.deepEqual(packageJson, omit(fixture, ['dependencies']));
 
-	await removePackageDependencies(temporary, {devDependencies: ['bar']});
+	await removePackageDependencies(temporary, {devDependencies: ['bar', 'baz'], peerDependencies: ['foobar']});
 	packageJson = await readPackage({cwd: temporary, normalize: false});
 
-	t.deepEqual(packageJson, omit(fixture, ['dependencies', 'devDependencies.bar']));
+	t.deepEqual(packageJson, pick(fixture, ['name']));
 });
 
 test('async - should not throw if package.json does not exist', async t => {
@@ -146,10 +146,10 @@ test('sync - multiple types', t => {
 
 	t.deepEqual(packageJson, omit(fixture, ['dependencies']));
 
-	removePackageDependenciesSync(temporary, {devDependencies: ['bar']});
+	removePackageDependenciesSync(temporary, {devDependencies: ['bar', 'baz'], peerDependencies: ['foobar']});
 	packageJson = readPackageSync({cwd: temporary, normalize: false});
 
-	t.deepEqual(packageJson, omit(fixture, ['dependencies', 'devDependencies.bar']));
+	t.deepEqual(packageJson, pick(fixture, ['name']));
 });
 
 test('sync - should not throw if package.json does not exist', t => {
