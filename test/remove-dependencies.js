@@ -43,10 +43,27 @@ test('async - multiple types', async t => {
 
 	t.deepEqual(packageJson, omit(fixture, ['dependencies']));
 
-	await removePackageDependencies(temporary, {devDependencies: ['bar', 'baz'], peerDependencies: ['foobar']});
+	await removePackageDependencies(temporary, {devDependencies: ['bar']});
 	packageJson = await readPackage({cwd: temporary, normalize: false});
 
-	t.deepEqual(packageJson, pick(fixture, ['name']));
+	t.deepEqual(packageJson, omit(fixture, ['dependencies', 'devDependencies.bar']));
+});
+
+test('async - multiple types with multiple dependencies', async t => {
+	const temporary = temporaryDirectory();
+
+	const fixture = {
+		name: 'foo',
+		dependencies: {foo: '1.0.0', bar: '1.0.0', baz: '1.0.0'},
+		devDependencies: {foobar: '1.0.0', foobaz: '1.0.0'},
+	};
+
+	await writePackage(temporary, fixture);
+
+	await removePackageDependencies(temporary, {dependencies: ['foo', 'bar'], devDependencies: ['foobar', 'foobaz']});
+	const packageJson = await readPackage({cwd: temporary, normalize: false});
+
+	t.deepEqual(packageJson, pick(fixture, ['name', 'dependencies.baz']));
 });
 
 test('async - should not throw if package.json does not exist', async t => {
@@ -146,10 +163,27 @@ test('sync - multiple types', t => {
 
 	t.deepEqual(packageJson, omit(fixture, ['dependencies']));
 
-	removePackageDependenciesSync(temporary, {devDependencies: ['bar', 'baz'], peerDependencies: ['foobar']});
+	removePackageDependenciesSync(temporary, {devDependencies: ['bar']});
 	packageJson = readPackageSync({cwd: temporary, normalize: false});
 
-	t.deepEqual(packageJson, pick(fixture, ['name']));
+	t.deepEqual(packageJson, omit(fixture, ['dependencies', 'devDependencies.bar']));
+});
+
+test('sync - multiple types with multiple dependencies', t => {
+	const temporary = temporaryDirectory();
+
+	const fixture = {
+		name: 'foo',
+		dependencies: {foo: '1.0.0', bar: '1.0.0', baz: '1.0.0'},
+		devDependencies: {foobar: '1.0.0', foobaz: '1.0.0'},
+	};
+
+	writePackageSync(temporary, fixture);
+
+	removePackageDependenciesSync(temporary, {dependencies: ['foo', 'bar'], devDependencies: ['foobar', 'foobaz']});
+	const packageJson = readPackageSync({cwd: temporary, normalize: false});
+
+	t.deepEqual(packageJson, pick(fixture, ['name', 'dependencies.baz']));
 });
 
 test('sync - should not throw if package.json does not exist', t => {
