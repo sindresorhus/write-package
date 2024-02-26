@@ -1,7 +1,7 @@
 import path from 'node:path';
 import fs, {promises as fsPromises} from 'node:fs';
 import test from 'ava';
-import {omit} from 'filter-anything';
+import {omit, pick} from 'filter-anything';
 import {temporaryDirectory} from 'tempy';
 import {readPackage, readPackageSync} from 'read-pkg';
 import {removePackageDependencies, removePackageDependenciesSync, writePackage, writePackageSync} from '../index.js';
@@ -47,6 +47,23 @@ test('async - multiple types', async t => {
 	packageJson = await readPackage({cwd: temporary, normalize: false});
 
 	t.deepEqual(packageJson, omit(fixture, ['dependencies', 'devDependencies.bar']));
+});
+
+test('async - multiple types with multiple dependencies', async t => {
+	const temporary = temporaryDirectory();
+
+	const fixture = {
+		name: 'foo',
+		dependencies: {foo: '1.0.0', bar: '1.0.0', baz: '1.0.0'},
+		devDependencies: {foobar: '1.0.0', foobaz: '1.0.0'},
+	};
+
+	await writePackage(temporary, fixture);
+
+	await removePackageDependencies(temporary, {dependencies: ['foo', 'bar'], devDependencies: ['foobar', 'foobaz']});
+	const packageJson = await readPackage({cwd: temporary, normalize: false});
+
+	t.deepEqual(packageJson, pick(fixture, ['name', 'dependencies.baz']));
 });
 
 test('async - should not throw if package.json does not exist', async t => {
@@ -150,6 +167,23 @@ test('sync - multiple types', t => {
 	packageJson = readPackageSync({cwd: temporary, normalize: false});
 
 	t.deepEqual(packageJson, omit(fixture, ['dependencies', 'devDependencies.bar']));
+});
+
+test('sync - multiple types with multiple dependencies', t => {
+	const temporary = temporaryDirectory();
+
+	const fixture = {
+		name: 'foo',
+		dependencies: {foo: '1.0.0', bar: '1.0.0', baz: '1.0.0'},
+		devDependencies: {foobar: '1.0.0', foobaz: '1.0.0'},
+	};
+
+	writePackageSync(temporary, fixture);
+
+	removePackageDependenciesSync(temporary, {dependencies: ['foo', 'bar'], devDependencies: ['foobar', 'foobaz']});
+	const packageJson = readPackageSync({cwd: temporary, normalize: false});
+
+	t.deepEqual(packageJson, pick(fixture, ['name', 'dependencies.baz']));
 });
 
 test('sync - should not throw if package.json does not exist', t => {
