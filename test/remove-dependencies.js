@@ -4,9 +4,14 @@ import test from 'ava';
 import {omit, pick} from 'filter-anything';
 import {temporaryDirectory} from 'tempy';
 import {readPackage, readPackageSync} from 'read-pkg';
-import {removePackageDependencies, removePackageDependenciesSync, writePackage, writePackageSync} from '../index.js';
+import {
+	removePackageDependencies,
+	removePackageDependenciesSync,
+	writePackage,
+	writePackageSync,
+} from '../index.js';
 
-const emptyPropFixture = {
+const emptyPropertyFixture = {
 	foo: true,
 	dependencies: {},
 	devDependencies: {},
@@ -85,7 +90,7 @@ test('async - removing non-existent dependencies should not throw', async t => {
 test('async - removes empty dependency properties by default', async t => {
 	const temporary = temporaryDirectory();
 
-	await writePackage(temporary, emptyPropFixture, {normalize: false});
+	await writePackage(temporary, emptyPropertyFixture, {normalize: false});
 	await removePackageDependencies(temporary, []);
 
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
@@ -95,11 +100,11 @@ test('async - removes empty dependency properties by default', async t => {
 test('async - allow not removing empty dependency properties', async t => {
 	const temporary = temporaryDirectory();
 
-	await writePackage(temporary, emptyPropFixture, {normalize: false});
+	await writePackage(temporary, emptyPropertyFixture, {normalize: false});
 	await removePackageDependencies(temporary, [], {normalize: false});
 
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
-	t.deepEqual(packageJson, emptyPropFixture);
+	t.deepEqual(packageJson, emptyPropertyFixture);
 });
 
 test('async - detect tab indent', async t => {
@@ -205,7 +210,7 @@ test('sync - removing non-existent dependencies should not throw', t => {
 test('sync - removes empty dependency properties by default', t => {
 	const temporary = temporaryDirectory();
 
-	writePackageSync(temporary, emptyPropFixture, {normalize: false});
+	writePackageSync(temporary, emptyPropertyFixture, {normalize: false});
 	removePackageDependenciesSync(temporary, []);
 
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
@@ -215,11 +220,11 @@ test('sync - removes empty dependency properties by default', t => {
 test('sync - allow not removing empty dependency properties', t => {
 	const temporary = temporaryDirectory();
 
-	writePackageSync(temporary, emptyPropFixture, {normalize: false});
+	writePackageSync(temporary, emptyPropertyFixture, {normalize: false});
 	removePackageDependenciesSync(temporary, [], {normalize: false});
 
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
-	t.deepEqual(packageJson, emptyPropFixture);
+	t.deepEqual(packageJson, emptyPropertyFixture);
 });
 
 test('sync - detect tab indent', t => {

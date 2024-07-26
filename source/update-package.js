@@ -7,10 +7,10 @@ import {sanitize, normalize} from './util.js';
 export async function updatePackage(filePath, data, options) {
 	({filePath, data, options} = sanitize(filePath, data, options));
 
-	let pkg;
+	let package_;
 
 	try {
-		pkg = await readPackage({cwd: path.dirname(filePath), normalize: false});
+		package_ = await readPackage({cwd: path.dirname(filePath), normalize: false});
 	} catch (error) {
 		// 'package.json' doesn't exist
 		if (error.code === 'ENOENT') {
@@ -20,22 +20,22 @@ export async function updatePackage(filePath, data, options) {
 		throw error;
 	}
 
-	pkg = deepmerge(pkg, data);
+	package_ = deepmerge(package_, data);
 
 	if (options.normalize) {
-		pkg = normalize(pkg);
+		package_ = normalize(package_);
 	}
 
-	return writeJsonFile(filePath, pkg, options);
+	return writeJsonFile(filePath, package_, options);
 }
 
 export function updatePackageSync(filePath, data, options) {
 	({filePath, data, options} = sanitize(filePath, data, options));
 
-	let pkg;
+	let package_;
 
 	try {
-		pkg = readPackageSync({cwd: path.dirname(filePath), normalize: false});
+		package_ = readPackageSync({cwd: path.dirname(filePath), normalize: false});
 	} catch (error) {
 		// 'package.json' doesn't exist
 		if (error.code === 'ENOENT') {
@@ -46,11 +46,11 @@ export function updatePackageSync(filePath, data, options) {
 		throw error;
 	}
 
-	pkg = deepmerge(pkg, data);
+	package_ = deepmerge(package_, data);
 
 	if (options.normalize) {
-		pkg = normalize(pkg);
+		package_ = normalize(package_);
 	}
 
-	writeJsonFileSync(filePath, pkg, options);
+	writeJsonFileSync(filePath, package_, options);
 }

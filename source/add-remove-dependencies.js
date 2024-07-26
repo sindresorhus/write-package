@@ -19,10 +19,10 @@ export function addPackageDependenciesSync(filePath, dependencies, options) {
 export async function removePackageDependencies(filePath, dependencies, options) {
 	({filePath, data: dependencies, options} = sanitize(filePath, dependencies, options, {sanitizeData: false}));
 
-	let pkg;
+	let package_;
 
 	try {
-		pkg = await readPackage({cwd: path.dirname(filePath), normalize: false});
+		package_ = await readPackage({cwd: path.dirname(filePath), normalize: false});
 	} catch (error) {
 		// 'package.json' doesn't exist
 		if (error.code === 'ENOENT') {
@@ -34,30 +34,30 @@ export async function removePackageDependencies(filePath, dependencies, options)
 
 	if (Array.isArray(dependencies)) {
 		for (const dependency of dependencies) {
-			delete pkg.dependencies[dependency];
+			delete package_.dependencies[dependency];
 		}
 	} else {
 		for (const [dependencyKey, _dependencies] of Object.entries(dependencies)) {
 			for (const dependency of _dependencies) {
-				delete pkg[dependencyKey][dependency];
+				delete package_[dependencyKey][dependency];
 			}
 		}
 	}
 
 	if (options.normalize) {
-		pkg = normalize(pkg);
+		package_ = normalize(package_);
 	}
 
-	return writeJsonFile(filePath, pkg, options);
+	return writeJsonFile(filePath, package_, options);
 }
 
 export function removePackageDependenciesSync(filePath, dependencies, options) {
 	({filePath, data: dependencies, options} = sanitize(filePath, dependencies, options, {sanitizeData: false}));
 
-	let pkg;
+	let package_;
 
 	try {
-		pkg = readPackageSync({cwd: path.dirname(filePath), normalize: false});
+		package_ = readPackageSync({cwd: path.dirname(filePath), normalize: false});
 	} catch (error) {
 		// 'package.json' doesn't exist
 		if (error.code === 'ENOENT') {
@@ -69,19 +69,19 @@ export function removePackageDependenciesSync(filePath, dependencies, options) {
 
 	if (Array.isArray(dependencies)) {
 		for (const dependency of dependencies) {
-			delete pkg.dependencies[dependency];
+			delete package_.dependencies[dependency];
 		}
 	} else {
 		for (const [dependencyKey, _dependencies] of Object.entries(dependencies)) {
 			for (const dependency of _dependencies) {
-				delete pkg[dependencyKey][dependency];
+				delete package_[dependencyKey][dependency];
 			}
 		}
 	}
 
 	if (options.normalize) {
-		pkg = normalize(pkg);
+		package_ = normalize(package_);
 	}
 
-	writeJsonFileSync(filePath, pkg, options);
+	writeJsonFileSync(filePath, package_, options);
 }

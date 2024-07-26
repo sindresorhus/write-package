@@ -6,17 +6,17 @@ import {writePackage} from '../index.js';
 
 /** @type {import('./types').NoPathMacro} */
 const verifyPackage = test.macro(async (t, {fixture, assertions}) => {
-	const temporaryDir = temporaryDirectory();
+	const temporaryDirectory_ = temporaryDirectory();
 
 	if (fixture) {
-		await writePackage(temporaryDir, fixture);
+		await writePackage(temporaryDirectory_, fixture);
 	}
 
 	const testedModule = await esmock('../index.js', {}, {
-		'node:path': {join: () => `${temporaryDir}/package.json`},
+		'node:path': {join: () => `${temporaryDirectory_}/package.json`},
 	});
 
-	const getPackageJson = async () => readPackage({cwd: temporaryDir, normalize: false});
+	const getPackageJson = async () => readPackage({cwd: temporaryDirectory_, normalize: false});
 	await assertions({t, testedModule, getPackageJson});
 });
 

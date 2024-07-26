@@ -54,7 +54,7 @@ test('sync', t => {
 	t.deepEqual(Object.keys(packageJson.peerDependencies), ['bar', 'foo']);
 });
 
-const emptyPropFixture = {
+const emptyPropertyFixture = {
 	foo: true,
 	dependencies: {},
 	devDependencies: {},
@@ -64,7 +64,7 @@ const emptyPropFixture = {
 
 test('async - removes empty dependency properties by default', async t => {
 	const temporary = temporaryDirectory();
-	await writePackage(temporary, emptyPropFixture);
+	await writePackage(temporary, emptyPropertyFixture);
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
 	t.true(packageJson.foo);
 	t.falsy(packageJson.dependencies);
@@ -75,7 +75,7 @@ test('async - removes empty dependency properties by default', async t => {
 
 test('sync - removes empty dependency properties by default', t => {
 	const temporary = temporaryDirectory();
-	writePackageSync(temporary, emptyPropFixture);
+	writePackageSync(temporary, emptyPropertyFixture);
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
 	t.true(packageJson.foo);
 	t.falsy(packageJson.dependencies);
@@ -86,7 +86,7 @@ test('sync - removes empty dependency properties by default', t => {
 
 test('async - allow not removing empty dependency properties', async t => {
 	const temporary = temporaryDirectory();
-	await writePackage(temporary, emptyPropFixture, {normalize: false});
+	await writePackage(temporary, emptyPropertyFixture, {normalize: false});
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
 	t.true(packageJson.foo);
 	t.truthy(packageJson.dependencies);
@@ -97,7 +97,7 @@ test('async - allow not removing empty dependency properties', async t => {
 
 test('sync - allow not removing empty dependency properties', t => {
 	const temporary = temporaryDirectory();
-	writePackageSync(temporary, emptyPropFixture, {normalize: false});
+	writePackageSync(temporary, emptyPropertyFixture, {normalize: false});
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
 	t.true(packageJson.foo);
 	t.truthy(packageJson.dependencies);

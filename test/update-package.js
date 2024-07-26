@@ -3,9 +3,14 @@ import fs, {promises as fsPromises} from 'node:fs';
 import test from 'ava';
 import {temporaryDirectory} from 'tempy';
 import {readPackage, readPackageSync} from 'read-pkg';
-import {writePackage, writePackageSync, updatePackage, updatePackageSync} from '../index.js';
+import {
+	writePackage,
+	writePackageSync,
+	updatePackage,
+	updatePackageSync,
+} from '../index.js';
 
-const emptyPropFixture = {
+const emptyPropertyFixture = {
 	foo: true,
 	dependencies: {},
 	devDependencies: {},
@@ -81,7 +86,7 @@ test('async - merge dependencies', async t => {
 test('async - removes empty dependency properties by default', async t => {
 	const temporary = temporaryDirectory();
 
-	await updatePackage(temporary, emptyPropFixture);
+	await updatePackage(temporary, emptyPropertyFixture);
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
 
 	t.true(packageJson.foo);
@@ -94,10 +99,10 @@ test('async - removes empty dependency properties by default', async t => {
 test('async - allow not removing empty dependency properties', async t => {
 	const temporary = temporaryDirectory();
 
-	await updatePackage(temporary, emptyPropFixture, {normalize: false});
+	await updatePackage(temporary, emptyPropertyFixture, {normalize: false});
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
 
-	t.deepEqual(packageJson, emptyPropFixture);
+	t.deepEqual(packageJson, emptyPropertyFixture);
 });
 
 test('async - detect tab indent', async t => {
@@ -200,7 +205,7 @@ test('sync - merge dependencies', t => {
 test('sync - removes empty dependency properties by default', t => {
 	const temporary = temporaryDirectory();
 
-	updatePackageSync(temporary, emptyPropFixture);
+	updatePackageSync(temporary, emptyPropertyFixture);
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
 
 	t.true(packageJson.foo);
@@ -213,10 +218,10 @@ test('sync - removes empty dependency properties by default', t => {
 test('sync - allow not removing empty dependency properties', t => {
 	const temporary = temporaryDirectory();
 
-	updatePackageSync(temporary, emptyPropFixture, {normalize: false});
+	updatePackageSync(temporary, emptyPropertyFixture, {normalize: false});
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
 
-	t.deepEqual(packageJson, emptyPropFixture);
+	t.deepEqual(packageJson, emptyPropertyFixture);
 });
 
 test('sync - detect tab indent', t => {

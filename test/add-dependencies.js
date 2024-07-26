@@ -4,7 +4,12 @@ import test from 'ava';
 import {pick} from 'filter-anything';
 import {temporaryDirectory} from 'tempy';
 import {readPackage, readPackageSync} from 'read-pkg';
-import {writePackage, writePackageSync, addPackageDependencies, addPackageDependenciesSync} from '../index.js';
+import {
+	writePackage,
+	writePackageSync,
+	addPackageDependencies,
+	addPackageDependenciesSync,
+} from '../index.js';
 
 const fixture = {
 	foo: true,
@@ -30,7 +35,7 @@ const fixture = {
 	},
 };
 
-const emptyPropFixture = {
+const emptyPropertyFixture = {
 	foo: true,
 	dependencies: {},
 	devDependencies: {},
@@ -122,7 +127,7 @@ test('async - overwrite dependency', async t => {
 
 test('async - allow not removing empty dependency properties', async t => {
 	const temporary = temporaryDirectory();
-	await writePackage(temporary, emptyPropFixture, {normalize: false});
+	await writePackage(temporary, emptyPropertyFixture, {normalize: false});
 	await addPackageDependencies(temporary, pick(addFixture, ['dependencies', 'devDependencies']), {normalize: false});
 	const packageJson = await readPackage({cwd: temporary, normalize: false});
 
@@ -220,7 +225,7 @@ test('sync - overwrite dependency', t => {
 
 test('sync - allow not removing empty dependency properties', t => {
 	const temporary = temporaryDirectory();
-	writePackageSync(temporary, emptyPropFixture, {normalize: false});
+	writePackageSync(temporary, emptyPropertyFixture, {normalize: false});
 	addPackageDependenciesSync(temporary, pick(addFixture, ['dependencies', 'devDependencies']), {normalize: false});
 	const packageJson = readPackageSync({cwd: temporary, normalize: false});
 
