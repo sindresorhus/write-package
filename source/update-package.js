@@ -2,7 +2,7 @@ import path from 'node:path';
 import {writeJsonFile, writeJsonFileSync} from 'write-json-file';
 import {readPackage, readPackageSync} from 'read-pkg';
 import {deepmerge} from 'deepmerge-ts';
-import {sanitize, normalize} from './util.js';
+import {sanitize, normalize, shouldDisableDetectIndent} from './util.js';
 
 export async function updatePackage(filePath, data, options) {
 	({filePath, data, options} = sanitize(filePath, data, options));
@@ -18,6 +18,11 @@ export async function updatePackage(filePath, data, options) {
 		}
 
 		throw error;
+	}
+
+	// Disable detectIndent for empty packages to ensure proper formatting
+	if (shouldDisableDetectIndent(package_, options)) {
+		options = {...options, detectIndent: false};
 	}
 
 	package_ = deepmerge(package_, data);
@@ -44,6 +49,11 @@ export function updatePackageSync(filePath, data, options) {
 		}
 
 		throw error;
+	}
+
+	// Disable detectIndent for empty packages to ensure proper formatting
+	if (shouldDisableDetectIndent(package_, options)) {
+		options = {...options, detectIndent: false};
 	}
 
 	package_ = deepmerge(package_, data);

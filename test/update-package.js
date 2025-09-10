@@ -257,3 +257,63 @@ test('sync - invalid package.json should throw', t => {
 		{name: 'JSONError'},
 	);
 });
+
+test('async - empty package.json gets tab indentation by default', async t => {
+	const temporary = path.join(temporaryDirectory(), 'package.json');
+	fs.writeFileSync(temporary, '{}');
+	await updatePackage(temporary, {name: 'test', version: '1.0.0'});
+	t.is(
+		fs.readFileSync(temporary, 'utf8'),
+		'{\n\t"name": "test",\n\t"version": "1.0.0"\n}',
+	);
+});
+
+test('sync - empty package.json gets tab indentation by default', t => {
+	const temporary = path.join(temporaryDirectory(), 'package.json');
+	fs.writeFileSync(temporary, '{}');
+	updatePackageSync(temporary, {name: 'test', version: '1.0.0'});
+	t.is(
+		fs.readFileSync(temporary, 'utf8'),
+		'{\n\t"name": "test",\n\t"version": "1.0.0"\n}',
+	);
+});
+
+test('async - can override default tab with 2-space indent', async t => {
+	const temporary = path.join(temporaryDirectory(), 'package.json');
+	fs.writeFileSync(temporary, '{}');
+	await updatePackage(temporary, {name: 'test', version: '1.0.0'}, {indent: 2});
+	t.is(
+		fs.readFileSync(temporary, 'utf8'),
+		'{\n  "name": "test",\n  "version": "1.0.0"\n}',
+	);
+});
+
+test('sync - can override default tab with 2-space indent', t => {
+	const temporary = path.join(temporaryDirectory(), 'package.json');
+	fs.writeFileSync(temporary, '{}');
+	updatePackageSync(temporary, {name: 'test', version: '1.0.0'}, {indent: 2});
+	t.is(
+		fs.readFileSync(temporary, 'utf8'),
+		'{\n  "name": "test",\n  "version": "1.0.0"\n}',
+	);
+});
+
+test('async - detectIndent: false allows enforcing indent', async t => {
+	const temporary = path.join(temporaryDirectory(), 'package.json');
+	await writePackage(temporary, {foo: true}, {indent: '\t'});
+	await updatePackage(temporary, {bar: true}, {detectIndent: false, indent: 2});
+	t.is(
+		fs.readFileSync(temporary, 'utf8'),
+		'{\n  "foo": true,\n  "bar": true\n}\n',
+	);
+});
+
+test('sync - detectIndent: false allows enforcing indent', t => {
+	const temporary = path.join(temporaryDirectory(), 'package.json');
+	writePackageSync(temporary, {foo: true}, {indent: '\t'});
+	updatePackageSync(temporary, {bar: true}, {detectIndent: false, indent: 2});
+	t.is(
+		fs.readFileSync(temporary, 'utf8'),
+		'{\n  "foo": true,\n  "bar": true\n}\n',
+	);
+});

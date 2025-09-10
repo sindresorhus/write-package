@@ -13,6 +13,13 @@ export type Options = {
 	readonly indent?: string | number;
 
 	/**
+	Detect indentation automatically if the file exists.
+
+	@default true
+	*/
+	readonly detectIndent?: boolean;
+
+	/**
 	Remove empty `dependencies`, `devDependencies`, `optionalDependencies` and `peerDependencies` objects.
 
 	@default true

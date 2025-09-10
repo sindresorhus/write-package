@@ -33,8 +33,9 @@ export function sanitize(filePath, data, options, {sanitizeData = true} = {}) {
 
 	options = {
 		normalize: true,
-		...options,
 		detectIndent: true,
+		indent: '\t',
+		...options,
 	};
 
 	filePath = path.basename(filePath) === 'package.json' ? filePath : path.join(filePath, 'package.json');
@@ -44,4 +45,14 @@ export function sanitize(filePath, data, options, {sanitizeData = true} = {}) {
 	}
 
 	return {filePath, data, options};
+}
+
+export function isEmptyPackage(packageContent) {
+	return typeof packageContent === 'string'
+		? packageContent.trim() === '{}'
+		: Object.keys(packageContent).length === 0;
+}
+
+export function shouldDisableDetectIndent(contentOrPackage, options) {
+	return isEmptyPackage(contentOrPackage) && options.detectIndent !== false;
 }

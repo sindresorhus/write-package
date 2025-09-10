@@ -174,6 +174,13 @@ Accepts `'\t'` for tab indentation or a number of spaces.
 
 If the file already exists, the existing indentation will be used.
 
+##### detectIndent
+
+Type: `boolean`\
+Default: `true`
+
+Detect indentation automatically if the file exists.
+
 ##### normalize
 
 Type: `boolean`\
